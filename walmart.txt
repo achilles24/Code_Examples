@@ -1,0 +1,585 @@
+Prob1:
+Given an input array and another array that describes a new index for each element, mutate the input array so that each element ends up in their new index. Discuss the runtime of the algorithm and how you can be sure there won't be any infinite loops.
+
+var arr = ['a', 'p', 'k', 'r', 'h', 's', 'a']; 
+var indices = [1, 3, 0, 2, 6, 5, 4];
+
+Method 1:
+
+function reposition(arr, indices) { 
+	var newArr = [];
+	for(var i = 0; i < arr.length; ++i) { 
+		var newIndex = indices[i]; 
+		newArr[newIndex] = arr[i]; 
+	} 
+	return newArr; 
+} 
+
+reposition(arr, indices); 
+
+Method 2:
+
+indices.map(function (item, index) { 
+	return arr[indices.indexOf(index)]; 
+});
+
+Method 3:
+
+var newArr = [];
+indices.forEach((num, index) => newArr[index]=letters[num]);
+
+Prob2:
+Given input: // could be potentially more than 3 keys in the object above 
+var items = [ {color: 'red', type: 'tv', age: 18}, {color: 'silver', type: 'phone', age: 20} ... ];
+var excludes = [ {k: 'color', v: 'silver'}, {k: 'type', v: 'tv'}, .... ]; 
+
+function excludeItems(items, excludes) { 
+	excludes.forEach(pair => { 
+		items = items.filter(item => item[pair.k] === item[pair.v]); 
+	});
+	return items; 
+} 
+1. Describe what this function is doing... 
+2. What is wrong with that function ? 
+3. How would you optimize it ?
+
+ 1. fixing a bug in the filter function. 
+	function excludeItems(items, excludes) { 
+		excludes.forEach(pair => { 
+		items = items.filter(item => item[pair.k] !== pair.v); }); 
+		return items; 
+	}
+
+ 2. optimizing... the function is O(n^2). still we can optimize in worst case O(n^2) but , as soon as it finds an excluded condition meets, no need to see remaining excluded pairs. just jumping to next item. Array.forEach or Array.map does not allow 'break' in the middle of loop while regular FOR sentence does. So, I replaced Array.forEach with FOR sentence. 
+
+	function excludeItems(items, excludes) { 
+		let result = items.filter(item => { 
+			for(let e = 0; e < excludes.length; e++) { 
+				let pair = excludes[e]; 
+				if(item[pair.k] === pair.v) { 
+			  		return false; // moving to next item. no need to see next excluded element 
+				} 
+			}
+			return true; 
+		}); 
+		return result; 
+	}
+
+
+var items = [ {color: 'red', type: 'tv', age: 18}, {color: 'silver', type: 'phone', age: 20} , {color: 'gold', type: 'phone', age: 20} ];
+var excludes = [ {k: 'color', v: 'silver'}, {k: 'type', v: 'tv'} ];
+
+Method 1:
+
+function excludeItems(items, excludes) { 
+    excludes.forEach(pair => { 
+        items = items.filter(item => item[pair.k] !== pair.v); 
+    }); 
+    return items; 
+}
+
+excludeItems(items, excludes)
+
+Method 2:
+
+var excludeObj = {};
+excludes.forEach(pair => excludeObj[`${pair.k}_${pair.v}`]=true);
+
+function exclude(items, excludeObj) {
+    items = items.filter(item => !Object.keys(item).some(ele => excludeObj[`${ele}_${item[ele]}`]));
+    return items;
+}
+
+exclude(items, excludeObj)
+
+Prob3:
+
+1. In JavaScript, write a function that takes an array as input that can contain both ints and more arrays (which can also contain an array or int) and return the flattened array. ex. [1, [2, [ [3, 4], 5], 6]] => [1, 2, 3, 4, 5, 6] 
+2. Using HTML and CSS, show how you would create an image that would display another image (aligned to the bottom, right) when the user hovers over the image. ex. The Facebook "edit profile picture" icon
+
+var arr = [1, [1,2], 1];
+
+Method 1:
+
+arr.join().split(',').map(Number);
+
+Explanation:
+
+let str = arr.join(); // '1,1,2,1' return string
+let strArr = str.split(','); // it converts string to array & returns ['1','1','2','1']
+strArr.map(Number); // it loop through string & convert to number
+
+Method 2:
+
+arr.flat();
+ar.flat(Infinity);
+
+Method 3:
+I would think the question is trying to see how you can traverse nested structures. My solution traverses the array and does it recursively, which I think is appropriate when traversing nested structures
+
+function flatten(arr) { 
+    var newArr = []; 
+    arr.forEach(function iterate(el) { 
+        if ( el instanceof Array){ 
+            el.forEach(iterate); 
+        } else { 
+           newArr.push(el); 
+        } 
+    }); 
+return newArr; 
+} 
+
+CSS question is fairly easy. Given two img elements with the classes "one" and "two", you can give them the styles: 
+
+Solution:
+1. Descendant Selector (space) <div> kulla iruka anaithu <p> i.e nested <p>
+
+div p {
+  background-color: yellow;
+}
+
+2. Child Selector (>) <div> kulla iruka <p> matum not <div><section><p></p></section></div>
+
+div > p {
+  background-color: yellow;
+}
+
+.two { 
+  display:none; 
+} 
+.one:hover + .two {  //  + Adjacent sibling selector .one class ku pakathula irukura .two class matum
+  display: block; 	//  ~ General sibling selector .one class ku pakathula irukura anaithu .two class
+} 
+
+<html>
+<head>
+	<style>
+    	.two { 
+  			display:none; 
+		} 
+		.one:hover + .two { 
+  			display: block; 
+		}
+    </style>
+</head>
+<body>
+
+<h2>HTML Image</h2>
+	<img class="one" src="pic_trulli.jpg" alt="Trulli" width="500" height="333">
+	<img class="two" src="pic_trulli.jpg" alt="Trulli" width="500" height="333">
+    	<img class="two" src="pic_trulli.jpg" alt="Trulli" width="500" height="333">
+
+</body>
+</html>
+
+Prob4:
+
+Given a grid of characters output a decoded message. The message for the following would be IROCKA. (diagonally down right and diagonally up right if you can't go further... you continue doing this) I B C A L K A D R F C A E A G H O E L A D
+
+I B C A L K A 
+D R F C A E A 
+G H O E L A D
+
+let arr = [[I B C A L K A], [D R F C A E A], [G H O E L A D]];
+let totalRow = arr.length;
+let totalCol = arr[0].length;
+let row=0, col=0;
+let msg = "";
+
+while( col < totalCol) {
+  msg = msg + arr[row][col]; 
+  row = (row === 0 || row < totalRow-1) ? row+1 : row-1; // row++ if less than total rows // row-- if back at row 0
+  col++;
+}
+
+msg // result as "IROCKLED"
+
+Prob5:
+
+Given an array, return it's flattened structure(skip objects)
+
+let arrs = [1, 2, [1,2], {"a": 1}];
+
+var newArr = [];
+arrs.forEach(function iterate(ele) {
+    if(ele instanceof Array) {
+        return ele.forEach(iterate);
+    } else if(ele instanceof Object){
+        return;
+    } else {
+        newArr.push(ele);
+    }
+});
+
+Prob6:
+
+If you were building a search tool and wanted search results to pop up as you typed but the server call was taxing, write a function that gets called on every key down but calls the server when the user stops typing for 400ms.
+
+Solution:
+
+var searchField = document.getElementById("searchField");
+var lastTimeId;
+var doSearchFun = function(e) { 
+    if(typeof lastTimeId !== 'undefined') { 
+        clearTimeout(lastTimeId); 
+    } 
+    lastTimeId = setTimeout(function() { // Do search stuff 
+        console.log('Do search for "' + searchField.value + '"'); 
+        }, 400); 
+}; 
+
+searchField.addEventListener("keydown", doSearchFun);
+
+Sample Solution:
+
+let timeout;
+window.addEventListener("keydown", function(event) {
+    if(timeout !== undefined) {
+        clearTimeout(timeout)
+    }
+    timeout = setTimeout(function() {console.log("search key")}, 400);
+});
+
+
+Prob7:
+
+Implement a simple store class with set(Node, value), get(Node) and has(Node) methods, which store a given Nodes with corresponding values.
+
+Sample solution:
+
+Method 1:
+
+class Store { 
+    constructor() { 
+        this._map = new Map(); 
+    } 
+    
+    set(node, value) { 
+        this._map.set(node,value); 
+    } 
+
+    get(node) { 
+        return this._map.get(node); 
+    } 
+
+    has(node) { 
+        return this._map.has(node); 
+    } 
+}
+
+Method 2:
+
+class Store {
+    constructor(node, value) {
+        this.node = node;
+        this.value = value;  
+    }
+
+    getNode() {
+        return this.node;
+    }
+
+    getValue() {
+        return this.value;
+    }
+    
+    setValue(value) {
+        this.value = value;
+        return this;
+    }
+}
+
+class SimpleStore { 
+    constructor() { 
+        this._container = []; 
+    } 
+
+    set(node, value) { 
+        let cachedNode; 
+        if (this.has(node)) { 
+            cachedNode = this.get(node); 
+            cachedNode.setValue(value); 
+        } else { 
+            cachedNode = new CachedNode(node, value); 
+            this._container.push(cachedNode); 
+        } 
+        return this; 
+    }
+
+     get(node) { 
+        return this._container.find((cachedNode) => { 
+            return cachedNode.getNode() === node; 
+        }); 
+    } 
+
+    has(node) { 
+        return !!this.get(node); 
+    } 
+}
+
+Prob8:
+
+Given a JS object, obj = {a: 1, getA: function() { return this.a } } var get = obj.getA; console.log(get()); what will it print? How will you prevent it to fit undefined?
+
+Solution: 
+
+var obj = {a: 1, getA: function() { return this.a } } 
+var get = obj.getA.bind(obj); console.log(get());
+
+Prob9:
+
+How to check if the string is palindrome ?
+
+Method 1:
+
+function isPalindrome(s) { 
+    if (!s) return s; 
+    if (s.length == 0) 
+        return false; 
+    let i = s.length - 1; 
+    let j = 0; 
+    while (j < i) { 
+        if (s.charAt(i) !== s.charAt(j)) 
+            return false; 
+        i--; 
+        j++; 
+    } 
+} 
+
+Method 2:
+
+function isPalindrome2(s) { 
+    if (!s) 
+        return s; 
+    if (s.length == 0) 
+        return false; 
+    return s == s.split('').reverse().join('') 
+}
+
+Prob10:
+
+Convert all the words with 3 alphabets to upper case in a sentence.(JS)
+
+Solution:
+
+function convert(string) { 
+	return string.split(' ').map(function(value) { 
+		if(value.length == 3) 
+			return value.toUpperCase(); 
+		return value; 
+	}).join(' '); 
+} 
+
+convert("welcome to dom world")
+'welcome to DOM world'
+
+Prob11:
+
+Write a multiplication function without using the multiplication operator - instead use addition, subtraction, and recursion.
+
+Method 1:
+
+function multiplication(a, b) {
+    let result = 0;
+    result = (a < b) ? calculate(a, b) : calculate(b, a);
+    return result;
+}
+
+function calculate(times, number) {
+    let i = 0;
+    let sum = 0;
+    while(i<times) {
+        sum = sum + number;
+        i++;
+    }
+    return sum;
+}
+
+multiplication(3,4);
+
+Method 2:
+
+let multiplyWithPlusOperator = (num, times) => { 
+    if (times === 1) { 
+        return num 
+    } else { 
+        return multiplyWithPlusOperator(num, times-1) + num 
+    } 
+}
+
+Prob12:
+
+the toughest they asked was construct a function with which i could do the following in jS both add(a,b) or add(a)(b) should return the same value
+
+Method 1:
+
+function add (x, y) { 
+    function add2 (z) { 
+        return x+z; 
+    } 
+    if (y) { 
+        return x+y; 
+    } else { 
+        return add2; 
+    } 
+}
+
+Method 2:
+
+function add() { 
+    if(arguments.length > 1){ 
+        return arguments[0] + arguments[1]; 
+    } 
+    var a = arguments[0]; 
+    return function() { 
+        return a + arguments[0] 
+    } 
+}
+
+Prob13:
+
+Code some code that checks if any items in an array are greater than 10
+
+var arr = [1,2,3,7,6,12,34];
+function checkGteTen(arr) {
+    return arr.filter(num => num > 10); // return filtered value
+}
+
+checkGteTen(arr) // [12, 34]
+
+arr.some(num => num > 10) // true it'll check the array & returns true if any number satisfies condition 
+
+
+Prob14:
+
+How would you position an object side by side
+
+Solution: display:inline on both elements
+
+.element1, .element2 { 
+   float: left, 
+   display: inline; 
+}
+
+Prob15:
+
+Given 
+var endorsements = [ { skill: 'css', user: 'Bill' }, { skill: 'javascript', user: 'Chad' }, { skill: 'javascript', user: 'Bill' }, { skill: 'css', user: 'Sue' }, { skill: 'javascript', user: 'Sue' }, { skill: 'html', user: 'Sue' } ]; 
+
+getSkills = (endorsements) => { 
+	var Result =
+	[ { skill: 'javascript', user: ['Chad', 'Bill', 'Sue'], count: 3 }, 
+	   { skill: 'css', user: ['Sue', 'Bill'], count: 2 }, 
+	   { skill: 'html', user: ['Sue'], count: 1 }  
+	]; 
+} 
+see this image: http://i.imgur.com/UIeB3n4.png
+
+Method 1:
+
+function getSkill(array) {
+    var result = new Map();
+    array.map(obj => {
+        if(result.has(obj.skill)) {
+            let user = result.get(obj.skill);
+            result.set(obj.skill, [...user, obj.user]);
+        } else {
+            result.set(obj.skill, [obj.user]);
+        }
+    })
+    let resultObj = [];
+    for(const [key, value] of result.entries()) {
+    	resultObj.push({"skill": key, "user": value, "count": value.length})
+    }
+    return resultObj;
+}
+
+Method 2:
+
+const getSkills = (endorsements) => { 
+    const endorsementsMap = endorsements.reduce((accum, curr) => { 
+        const { skill, user } = curr; 
+        if (accum.has(skill)) { 
+            accum.set(skill, [...accum.get(skill), user]); 
+        } else { 
+            accum.set(skill, [user]); 
+        } 
+        return accum; 
+    }, new Map()); 
+    let result = []; 
+    for (let [skill, user] of endorsementsMap.entries()) { 
+        result.push({ skill, user, count: user.length || 0 }); 
+    } 
+    return result; 
+};
+
+Prob16:
+
+Flatten array. This array can have multiple types: {}, [], "", undefined, null, 123 are all valid types inside the array.
+
+Method 1:
+
+function flatten(input) { 
+    var out = []; 
+    var loop = function(arr) { 
+        return arr.map(function(v) { 
+            return Array.isArray(v)? loop(v) : out.push(v); 
+        }); 
+    } 
+    loop(input); 
+    return out; 
+}
+
+Method 2:
+
+function flatArray(val, resultArr) { 
+    var result = resultArr || []; 
+    if (val instanceof Array) { 
+        for (var i = 0; i < val.length; i++) { 
+            flatArray(val[i], result); 
+        } 
+    } else if (val instanceof Object) { 
+        for (var p in val) { 
+            result.push(val[p]) 
+        } 
+    } else { 
+       result.push(val); 
+    } 
+    return result; 
+};
+
+let intervals = [ [[4,5],[6,10],[12,14]], [[4,5],[5,9],[13,16]], [[11,14]] ]; 
+
+const findFreeSlots = (intervals) => { 
+    let schedule=[]; 
+    intervals.forEach((person) => { 
+        schedule = [...schedule, ...person]; 
+    }); 
+    return findFreeIntervals(schedule.sort(sortIntervals)); 
+} 
+
+const sortIntervals = (interval1, interval2) => { 
+    if(interval1[0]) { 
+        let minIntervals=[]; 
+        intervals.forEach((interval,index) => { 
+            const curr = intervals[index][0]; 
+            const prev = index > 0 ? intervals[index-1][1] : 0; 
+            if (curr-prev > 0) 
+                minIntervals = [...minIntervals, [prev,curr]]; 
+        }); 
+    return minIntervals;
+} 
+
+const expect = (res) => ({ toEqual: (val) => { 
+    if(JSON.stringify(res) == JSON.stringify(val)) { 
+        console.log('Passed'); 
+    } else { 
+        console.log('Failed. Expected '); 
+        console.log(val); 
+        console.log('got'); 
+        console.log(res); 
+    } 
+} 
+}); 
+
+expect(findFreeSlots(intervals)).toEqual([[0,4],[11,12],[16,23]]);

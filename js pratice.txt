@@ -1,0 +1,1426 @@
+var markMass, markHeight, markBmi, johnMass, johnHeight, johnBmi, isMarkHigh;
+markBmi = markMass / (markHeight * markHeight);
+johnBmi = johnMass / (johnHeight * johnHeight);
+isMarkHigh = markBmi > johnBmi
+console.log("Is mark's BMI higher tahn john's?" + " " isMarkHigh);
+
+var billArr = [124,48,268];
+var tips = new Array();
+var final = new Array();
+var tipCalc = function(amount) {
+ if(amount < 50) {
+  return amount*0.2;
+ } else if(amount < 200) {
+  return amount*0.15;
+ } else if(amount > 200) {
+  return amount*0.1;
+ }
+}
+
+tips.push(tipCalc(48));
+final.push(tipCalc(48)+48);
+tips.push(tipCalc(268));
+final.push(tipCalc(268)+268);
+tips.unshift(tipCalc(124));     // tips.unshift() method push element at front => tips.push() method push elemennt at end.
+final.unshift(tipCalc(124)+124); // tips.pop() method remove element at end => tips.shift() method remove element at front.
+console.log(tips);
+console.log(final);
+
+var mark = {
+ name: 'mark',
+ mass: 20,
+ height: 5,
+ calcBmi: function() { // function type
+  this.bmi = this.mass/(this.height*this.height);
+  return this.bmi;
+ }
+};
+
+at first we call => mark.calcBmi()
+after that => console.log(mark.bmi)
+
+var john = new Object();
+ john.name = 'john';
+ john.mass = 25;
+ john['height'] = 6;
+ john['bmi'] = calcBmi = function() { // this is function
+  return this.mass/(this.height*this.height);
+ };
+john.bmi()  //calling the function
+ 
+var john = ['apple', 'ball', 3, true, 'elephant'];
+for(var i = 0; i<john.length; i++) {
+ if(typeof john[i] !== 'string') {
+  continue; 	// if typeof is not string then current iteration skip & iterate to next. Ans => apple ball elephant
+ }
+ console.log(john[i]);
+}
+
+var john = ['apple', 'ball', 3, true, 'elephant'];
+for(var i = 0; i<john.length; i++) {
+ if(typeof john[i] !== 'string') {
+  break;  	// if typeof is not string then whole loop stop execution. . Ans => apple ball
+ }
+ console.log(john[i]);
+}
+
+******************************************************
+var Person = function(name, job) { // Person constructor
+ this.name = name;
+ this.job = job;
+}
+
+var john = new Person('john', SE); // we create john obj from Person constructor.
+
+john // it will result as Person{name: "john", job: "SE"}
+
+Person.prototype.lastName = "cena"; //we have set prototype for Person constructor.
+
+then we can access john.lastName // result as cena.
+
+*****************************************************
+
+// creation of Object with Object.create(prototype)
+
+var personProto = {
+ calcAge: function() {
+  return 2020 - this.age;
+ }
+};
+
+var jane = Object.create(personProto, {
+ name: {value: 'jane'},
+ age: {value: 1995}
+});
+
+var john = Object.create(personProto);
+john.name = 'john';
+john.age = 1994;
+
+**************************************************
+First class function, passing function as argument
+
+function isTean(dob, fn) {
+ var age = fn(dob);
+ if(age>18) {
+  console.log("teanage! 18+");
+ } else {
+  console.log("restricted");
+ }
+}
+
+function calcAge(dob) {
+ return 2020-dob;
+}
+
+isTean(1995, calcAge);
+**************************************************
+First class function, function returning function
+
+function interviewQuestion(job) {
+ if(job === 'teacher') {
+  return function(name) {
+   console.log(name + "which subject do you teach?");
+  }
+ } else if(job === 'designer') {
+    return function(name) {
+    console.log(name + "what is UX?");
+    }
+ }
+}
+
+var teacherQuestion = interviewQuestion("teacher");
+var designerQuestion = interviewQuestion("designer");
+teacherQuestion("prakash");
+designerQuestion("john");
+
+or var teacherQuestion = interviewQuestion("teacher")("prakash");
+
+**************************************************
+
+Immediately Invoked Function Expression:
+
+(function () {
+ var score = Math.random() * 10;
+ console.log(score);
+})();
+
+***************************************************
+closures -> The inner funcion has always access to outer function variables & parameter 
+	even it outer function has returned
+
+function isTean(year) {
+ var dob = year;
+ return function() {
+  console.log(2020-dob); // here dob is outer function variable accessed inside.
+ }
+}
+
+var calcTean = isTean(1995); // this will return inner function.
+calcTean(); // this will produce output
+
+
+*********************************************************
+Call, Bind, Apply
+
+var john = {
+name: 'john',
+age: 28,
+job: 'SE',
+presentation: function(day) {
+ if(day === 'morning') {
+    console.log("hi good " + day + " i'm " + this.name);
+  } else if(day === 'evening') {
+     console.log("hi good " + day + " i'm " + this.name);
+  }
+ }
+}
+
+var jane = {
+name: 'jane',
+age: 26,
+job: 'SE'
+}
+
+john.presentation.call(jane, 'morning'); // in this, call method 
+  invokes john presentation function passing the jane object reference.
+
+
+john.presentation.apply(jane, ['morning', 'friendly']); //for apply, it is exactly same as call method, only difference is, 
+  we have to pass this reference & array of input as argument.
+
+
+var janevar = john.presentation.bind(jane, 'morning'); //this will return jhon presentation function with jane refernce
+janevar(); // this will produce result
+
+var years = [1990, 1965, 2020];
+
+function arrayCalc(arr, fn) {
+ var arrRes = [];
+ for(var i=0;i<arr.length;i++) {
+  arrRes.push(fn(arr[i]));
+ }
+ return arrRes;
+}
+
+function calcAge(yr) {
+ return 2020-yr;
+}
+
+function isTeen(yr, limit) {
+ return yr>=limit;
+}
+
+var age = arrayCalc(years, calcAge); // age array will display as [30, 55, 0]
+var result = arrayCalc(age, isTeen.bind(this, 20)); /// here isTeen.bind will return function, 
+this will result as [true, true, false]
+
+*******************************************************
+
+var Question = function(ques, choice, ans) {
+ this.ques = ques;
+ this.choice = choice;
+ this.ans = ans;
+};
+
+var q1 = new Question('what is our national bird?', ['1: Parrot', '2: Peacock'], 2);
+var q2 = new Question('what is our national animal?', ['1: Lion', '2: Tiger'], 2);
+var q3 = new Question('what is our Tamil Nadu capital?', ['1: Chennai', '2: Madurai'], 1);
+
+var questions = [];
+questions.push(q1);
+questions.push(q2);
+questions.push(q3);
+
+Question.prototype.displayQuestion = function() {
+ console.log(this.ques);
+ var arr = this.choice;
+ for(var i=0; i<arr.length;i++) {
+  console.log(arr[i]);
+ }
+}
+
+Question.prototype.checkAnswer = function(answer) {
+ if(answer === this.ans) {
+  console.log('correct answer');
+ } else {
+  console.log('wrong answer');
+ }
+ nextQuestion();
+}
+
+function nextQuestion() {
+ var n = Math.floor(Math.random()*(questions.length))+1;
+ var qq = questions[n];
+ qq.displayQuestion();
+ var correct = prompt('please select correct option!');
+ if(correct !== 'exit') {
+  questions[n].checkAnswer(parseInt(correct));
+ }
+
+nextQuestion();
+
+******************************************************
+ForEach:
+
+var arr = [1,2,3,4,5];
+
+syntax: 
+
+arr.forEach(callback fn(current pos, index pos, arr element));
+
+arr.forEach(function(currentEle, index, array) {
+ console.log(currentEle + ' ' + index + ' ' + array);
+});
+
+result: 
+
+1 0 1,2,3,4,5
+2 1 1,2,3,4,5
+3 2 1,2,3,4,5
+4 3 1,2,3,4,5
+5 4 1,2,3,4,5
+
+*******************************************************
+insertAdjacentHtml:
+
+'beforebegin': Before the element itself.
+'afterbegin': Just inside the element, before its first child.
+'beforeend': Just inside the element, after its last child.
+'afterend': After the element itself.
+
+var a = document.querySelector('.div-class');
+a.insertAdjacentHTML('beforeend', '<div id="two">two</div>');
+
+
+************************************************************
+isNaN(number) -> return true passed argument is not a number.
+isFinite(number) ->it can convert string to number itself & return true passed argument is number, finite, null or '0'
+
+************************************************************
+EventListener:
+
+document.querySelector('.div-class').eventListener('click', function() {
+ console.log('event listener');
+});
+
+		or
+
+document.querySelector('.div-class').eventListener('mouseover', callback); // here we can pass callback funtion without '()'.
+
+*********************************************************
+
+Event delegation:
+
+Event bubbling => if we click the paragraph element (<p></p>), event is triggered on particular element & exact same event is fired on parent elements to child-element => parent element. so it will bubble up.
+Target element => On bubbling, all the element knows which element is clicked. we can get that using Event object as event.target. these are called as event delegation.
+
+Use case: 
+
+	1. When we have an elements with lot of child element that we are interested in.
+	2. when we want an event handler attached to an element, that is not yet in the dom when our page is loaded.
+
+	<div class="parent-element">
+		<div class="child-element">
+			<p class="paragraph">welcome</p>
+		</div>
+	</div>
+
+************************************************************
+Array.prototype.forEach vs Array.prototype.map :
+
+var arr = [1,2,3,4,5];
+
+arr.forEach(function(ele, index) {  // it will result as undefined. if we need to get arr we do console.log(arr) => [0, 2, 6, 12, 20]
+ return arr[index] = ele*index;
+})
+
+	or 
+
+arr.forEach((x,i)=> arr[i]=x*i);
+
+arr.map(function(ele, index) { // it will result as [0, 2, 6, 12, 20].because it is automatically mutate change the arr which it called.
+ return ele*index;
+})
+
+	or
+
+arr.map((x,i) => x*i)
+
+1. The first difference between map() and forEach() is the returning value. The forEach() method returns undefined and map() 
+	returns a new array with the transformed elements. Even if they do the same job, the returning value remains different.
+2. The second difference between these array methods is the fact that map() is chainable. This means that you can attach reduce(), sort(), filter() and 
+	so on after performing a map() method on an array.That's something you can't do with forEach() because, as you might guess, it returns undefined.
+3. Map method little most faster.
+
+
+Array.prototype.reduce: 
+
+array.reduce(callbackFn(), intialvalue) // intial value what number we have to start with.
+
+[0, 1, 2, 3, 4].reduce(function(accumulator, currentValue, currentIndex, array) { // here accumulator is previously returned callback value, intially 1st value is set as accumulator.
+  return accumulator + currentValue;
+})
+ans: 10
+
+const fan = arr.reduce((accumulator,currentValue,index) => {
+ return accumulator + currentValue;
+},10) // here intial value set to 10 if itn't set then it should '0'
+
+ans: 20
+
+
+
+*************************************************************************
+Math.abs() // it will removes the (-) sign int the number.
+
+var num = -25 => Math.abs(num) => 25.
+
+************************************************************************
+number.toFixed() // this is the prototype type of primitive number type & it will remove decimal number with give argument
+
+var num = 25.6254 => num.toFixed(2) => 25.62
+
+**************************************************************************
+Math.ceil() // it used to round of next number
+
+var num = 4.5; 
+
+Math.ceil(num) => result as round off to 5
+
+************************************************************************* 
+
+number split & substr
+
+var num = '23456.54' => we need 23,456 i.e comma separated.so, 
+
+var numsplit = num.split('.'); => result will be in array [23456, 54]
+
+var int = numsplit[0];
+var decimalPart = numsplit[1];
+
+if(int>3){
+ int = (int.substr(0, int.length-3)) + ',' + (int.substr(int.length-3, 3));
+}
+
+
+then int = 23,456
+*******************************************************************************
+Date: 
+
+var date = new Date(); // Mon Oct 19 2020 11:39:38 GMT+0530 (India Standard Time)
+
+date.getFullYear(); // 2020
+date.getMonth(); // 9 =>here month index start at 0 so October as 9
+date.getDate(); //19
+
+*********************************************************************************
+ES6
+
+Difference between var & let, 
+
+	var 							let
+function scope						   block scope
+(i.e var decalred within function can access) 		   (i.e let decalred within open & close curly bracket {} can access)
+
+// ES5
+
+console.log(a) // printing before declaration result as undefined
+var a = apple;
+
+function sample() {
+if(true) {
+  var bun = 'ball'; even we intialize & decalre bun in if block
+ }
+ console.log(bun); // we get bun variable out of the block but within the function scope.
+}
+
+// ES6
+
+function sample() {
+if(true) {
+  let b = 'ball';
+ }
+ console.log(b); // we can't get let b. becoz b declare in if block.
+}
+
+function sample() {
+let b;
+if(true) {
+  b = 'ball';
+}
+ console.log(b);
+}
+
+
+const a = 'abd';
+a = 'a'; // here it will get error, becoz const can't change.
+
+& alse const a; // here const can't intialize as without declare value.
+
+******************************************************************************
+String manipulation in ES6:
+
+let fName = 'prakash';
+let lName = 'kumar';
+let yofBirth = 1995;
+function calcAge(dob) {
+ return 2020 - dob;
+}
+
+// ES5
+
+console.log('This is ' + fName + ' ' + lName + '.' + 'I'm ' + calcAge(yofBirth) + ' years old')
+
+// ES6
+
+console.log(`This is ${fName} ${lName}. I'm ${calcAge(yofBirth)} years old`)
+
+fName.startsWith('p') // return true
+fName.endsWith('s') // return false becoz 'prakash' end with 'h'.
+fName.includes('ka') // return true 'prakash' has characters 'ka'.
+lName.repeat(5); prakashprakashprakashprakashprakash it repeat 5times.
+
+******************************************************************************** 
+
+Arrow function
+
+let c = [1,2,3,4,5];
+
+// ES5
+
+c.map(function(ele, index) { // returns [0, 2, 6, 12, 20]
+ return ele*index;
+});
+
+// ES6 using arrow function
+
+c.map((ele,index)=> ele*index) // returns [0, 2, 6, 12, 20]
+
+let result = c.map((ele, index) => {
+ return ` The product of ${ele} & ${index} is ${ele*index}`; 
+});
+
+this will result as [" The product of 1 & 0 is 0", " The product of 2 & 1 is 2", " The product of 3 & 2 is 6", " The product of 4 & 3 is 12", " The product of 5 & 4 is 20"]0: " The product of 1 & 0 is 0"1: " The product of 2 & 1 is 2"2: " The product of 3 & 2 is 6"3: " The product of 4 & 3 is 12"4: " The product of 5 & 4 is 20"
+
+
+
+Arrow function 2:
+
+ES5: calling 'this' keyword, function inside the object.
+
+var person = {
+ name: 'prakash',
+ dob: 1995,
+ calcAge: function() {
+  return 2020-this.dob;
+ }
+}
+
+person.calcAge(); // will result as 25
+
+ES5: calling 'this' keyword, in callback function inside the function
+
+var box = {
+ color: 'green',
+ position: 1,
+ clickMe: function() {
+  document.querySelector('div-class').eventListener('click', function() {
+   console.log(this.position + ' ' + this.color); // here 'this' keyword return window object.
+  });
+ }
+}
+
+so we rewrite this
+
+var box = {
+ color: 'green',
+ position: 1,
+ clickMe: function() {
+  var self = this; // here we set 'this' reference to self.
+  document.querySelector('div-class').eventListener('click', function() {
+   console.log(self.position + ' ' + self.color); // here 'this' keyword return window object.
+  });
+ }
+}  
+
+another exaample:
+
+var names = ["apple", "ball", "cat"];
+var student = {
+name: 'prakash',
+dob: 1995,
+calcFrnds: function() {
+  var self = this; // here we assign 'this' object to self
+  var els = names.map(function (ele) { // here map has callback function as arguments
+   return ele + ' ' + self.name;
+  });
+ console.log(els);
+ }
+}
+
+
+ES6: to avoid "var self = this;" we use arrow function.
+
+var box = {
+ color: 'green',
+ position: 1,
+ clickMe: function() {
+  document.querySelector('div-class').eventListener('click', () => {
+   console.log(this.position + ' ' + this.color); // arrow function shares lexical this keyword of it surrounding.
+  });
+ }
+}
+
+another example:
+
+var student = {
+name: 'prakash',
+dob: 1995,
+calcFrnds: function() {
+  var els = names.map( (ele) => {
+   return `${ele}_${this.name}`;
+  });
+ console.log(els);
+ }
+}
+
+*******************************************************
+
+Destructuring:
+
+ES5: 
+
+var arr = [1,2,3,4];
+console.log(arr[0]);
+console.log(arr[1]);
+
+ES6:
+
+const [firstName, lastName, age] = ['prakash', 'kumar', 24]; // we can declare using const array
+
+console.log(firstName); // prakash
+console.log(lastName); // kumar
+console.log(age); // 24
+
+
+ES5: Object
+
+var obj = {
+ firstName: 'prakash',
+ lastName: 'kumar'
+}
+
+console.log(obj) // {firstName:'prakash', lastName:'kumar'}
+console.log(obj.firstName) // prakash
+console.log(obj.lastName) // kumar
+
+ES6: Object
+
+
+cosnt object = {
+ id: 1,
+ flId: 'fl_01'
+}
+
+Destructuring : => const {id, flId} = object;
+
+after destructuring then we can directly get using property name
+
+console.log(id) // 1
+console.log(flId) // fl_01
+
+or const {id: ID, flId: FL_ID} = object;
+
+console.log(ID) // 1
+console.log(FL_ID) // fl_01
+
+**********************************************************************
+
+Arrays in ES6
+
+
+var arr = [1,2,3,4];
+
+ES5:
+
+arr.forEach(function(ele) {
+ console.log(ele);
+});
+
+ES6:
+
+Array.from(arr);
+
+Array.from(arr).forEach(function(ele) {
+ console.log(ele);
+});
+
+ES5:
+
+for(var i=0; i<arr.length; i++) {
+  console.log(arr[i]);
+}
+
+ES6:
+
+for(const i of Array.from(arr)) {
+   console.log(i);
+}
+
+var names = ['apple', 'ball', 'cat'];
+
+for(const name of names) {
+ if(name.includes('pp')) {
+  console.log(true);
+ } else {
+  continue;
+ }
+}
+
+const value = names.findIndex(cur => cur ==='apple') // 0
+
+const value1 = names.find(cur => cur ==='apple') // apple
+
+**************************************************************
+ES6 Spread operator: (...) it is mostly used in function call
+
+function add(a,b,c,d) {
+ return a+b+c+d;
+}
+
+let num = [12,15,13,14]
+
+var res = add.apply(null, num); // old rule here .apply(null, arrayElement) 1st argument always null & 2nd element must array element
+
+add(...num); // ES6 here we use spread operator (...)=.three dot
+
+let arr1 = ['ab', 'bc', 'cd'];
+let arr2 = ['aba', 'bca', 'cda'];
+
+const combi = [...arr1, ...arr2]; //combining of two array
+
+console.log(combi); // ['ab', 'bc', 'cd', 'aba', 'bca', 'cda'];
+
+*****************************************************************
+ES6 Rest operator: same as spread operator & it is mostly used in function declaration.
+
+ES5:
+function sum() { //here we not pass any argument
+ console.log(arguments); // eventhough we can get what we pass as Arguments object
+}
+
+let arrr2 = [12,13,14];
+sum(arr2) // Arguments(3) [12,13,14, something]
+
+
+ES6:
+
+function rest(limit, ...pass) {
+ console.log(limit + ': ' + pass)
+}
+
+let limit = 56;
+let pass = [12,13,14];
+
+rest(limit, pass); // result as 12: 12,13,14
+
+************************************************************************
+ES6 Default operator:
+
+let Person = function(fName, lName, ntly) {
+ (ntly !== undefined) ?  ntly = ntly: ntly = 'america';
+ this.fName = fName;
+ this.lName = lName;
+ this.ntly = ntly;
+}
+
+let john = new Person('john', 'cena'); // here we doesn't pass ntly parameter result as Person {fName: "john", lName: "cena", ntly: "america"}
+
+inspite of apply condn in function 
+
+let Person = function(fName, lName, ntly='america') { // we set default value to ntly
+ this.fName = fName;
+ this.lName = lName;
+ this.ntly = ntly;
+}
+
+let johny = new Person('johny', 'cena') // Person {fName: "johny", lName: "cena", ntly: "america"}
+
+************************************************************************
+ES6 Map operator:
+
+let quest = new Map();
+quest.set(1, 'prakash')
+quest.set(2, 'kumar')
+quest.set(3, 'dilip')
+
+console.log(quest); // Map(2) {1 => "dilip", 2 => "kumar", 3 => "dilip"}
+
+console.log(quest.get(2)); // kumar
+
+if(quest.has(1)) {
+ quest.delete(1);
+}
+
+quest.clear() // clear all data
+
+quest.forEach((value, key) => {
+ console.log(`This is ${key} & ${value}`);
+})
+
+for(let [key, value] of quest.entries()) {
+ console.log(`This is ${key} & ${value}`); // result as This is 1 & dilip  This is 2 & kumar
+}
+
+***************************************************************************
+ES5 : 
+
+var Person = function(name, dob) {
+ this.name = name;
+ this.dob = dob;
+}
+
+Person.protype.calcAge = function() {
+ return 2020-this.dob;
+}
+
+ES6 Class:
+
+class Person {
+ constructor(name, dob) {
+  this.name = name;
+  this.dob = dob;
+ }
+
+ calcAge() {
+  console.log(2020-this.dob);
+ }
+
+ static greeting() {
+  console.log('welcome');
+ }
+}
+
+const jhon = new person('jhon', 1995);
+Person.greeting();
+
+***************************************************************************
+ES5:
+
+var Athelete = function(name, age, sport, medal) {
+ Person.call(this, name, age);
+ this.sport = sport;
+ this.medal = medal;
+}
+
+Athelete.prototype = Object.create(Person.prototype);
+
+Athelete.prototype.calcMedal = function() {
+ return this.medal;
+}
+
+var bolt = new Athelete('usain bolt', 1985, 'atheletic', 50);
+bolt.calcAge();
+
+*********************************************************************
+ES6 Inheritance:
+
+class Athelete extends Person{
+ constructor(name, dob, participate, medal) {
+  super(name, dob);
+  this.participate = participate;
+  this.medal = medal;
+ }
+
+ medalWon() {
+  return this.medal++;
+ }
+}
+
+let bradAthelete = new Athelete('Brad', 1985, 3, 7); 
+
+bradAthelete.medalWon(); // 7
+
+***********************************************************************
+Asynchronous: it means non-linear, it'll not follow order of calling. 
+  (i.e) it wait for something happened in other function.
+
+A word synchronous means running in linear.
+
+const first = () => {
+ console.log('first');
+ second();
+ console.log('end');
+};
+
+const second = () => {
+ console.log('second');
+};
+
+first(); // result print in order.
+ first
+ second
+ end
+
+Asynchronous: 
+
+const second = () => {
+ setTimeout(() => {
+  console.log('timeout ends'); // it'll run after 2sec
+ }, 2000)
+}
+
+const first = () => {
+ console.log('first');
+ second();
+ console.log('end');
+}
+
+first(); 
+second();
+
+it'll result as 
+ first
+ end // print before timeout
+ timeout end // print after timeout
+
+-> Allow Asynchronous function to run in background.
+-> we pass in callback that run once the function has finished its work.
+-> Move on immedately: Non blocking.
+
+Old way of using asynchronous
+
+function getRecipe() {
+ setTimeout(()=>{
+  const recipeId = [12,13,14];
+  console.log(recipeId);
+  setTimeout((id)=>{
+   const recipe = {id: id, name: 'prakash', publisher: 'kumar'};
+   console.log(`id: ${id} = ${recipe.name}`);
+  }, 1000, recipeId[0]);
+ }, 1500);
+}
+
+getRecipe()
+
+after 1.5sec result as=> (3) [12, 13, 14]
+after 1sec => id: 12 = prakash
+
+***************************************************************************
+
+Promise:
+
+-> Object that keep track about whether certain event has happened or not.
+-> Determines what happened after certain event has happened.
+-> Implement concept of future value that we are expecting.
+
+
+Promise states:
+
+											Event happens
+						Pending ------------------------------------> Settled/Resolved
+												   |
+												   |
+												   |
+                                  						  ----------------< >---------------
+								  |				    				|
+								  |                              	|
+								  |				    				|
+								  V				    				V
+							  Fullfilled						Rejected
+
+
+Syntax:
+
+const result = new Promise((resolve, reject) => {
+ setTimeout(() => {
+  resolve([12,13,14]); // it will return what inside the resolve after 1.5sec
+ }, 1500) 
+});
+
+const getIds = (ids) => {
+ return new Promise((resolve, reject) => {
+  setTimeout((id) => {
+   const obj = {name: 'prakash', age: 25};
+   resolve(`${id}: ${obj.name}`);
+  }, 1000, ids)
+ });
+}; 
+
+result.then((ele) => { // we need to process after resolved success.
+ console.log(ele);
+ return getIds(ele[1]);
+})
+.then((res) => {
+ console.log(res);
+})
+.catch((error) => {  // If rejected we need to catch error.
+ console.log('Error occures!!');
+});
+
+
+
+const p1 = new Promise((resolve, reject) => {
+	setTimeout(() => {
+		resolve(1);
+	}, 2000)
+)
+
+const p2 = new Promise((resolve, reject) => {
+	setTimeout(() => {
+		resolve(2);
+	}, 2000)
+)
+
+Promise.all([p1, p2]).then((result) => console.log(result)); // here we use Promise Class which has all method to run all asynchronous method in parallel & produce all resolved result in array.
+if any one fail both fails.
+
+Promise.race([p1, p2]).then((result) => console.log(result)); // here result is which promise get fulfilled 1st & result shouldn't array.
+
+******************************************************************
+Async Await: async function run synchronously in background & which return promise.
+
+var promise = new Promise((resolve, reject) => {
+ setTimeout(() => {
+  const person = {name: 'Sachin', profession: 'Athelete'};
+  resolve(person);
+ }, 1500);
+});
+
+var getPerson => (persons) { 
+ return new Promise((resolve, reject) => {
+  setTimeout((obj) => {
+   resolve(`${obj.name} is a good ${obj.profession}`);
+  }, 1000, persons);
+ });
+};
+
+async function getNames() { // async function always return promise object we can also get it using then() method
+ const sport = await promise; // here await will wait untill promise get resolved or reject which run asynchronously
+ console.log(sport);
+ const sachin = await getPerson(sport)
+ console.log(sachin);
+}
+
+getNames() // it will call the asyn function
+
+ {name: "Sachin", profession: "Athelete"}
+ Sachin is a good Athelete
+
+getNames().then((res) => {
+ console.log(res);
+});
+
+async function getNames() {
+	try {
+		const sport = await promise; 
+		console.log(sport);
+		const sachin = await getPerson(sport)
+		console.log(sachin);
+	} catch(err) {
+		console.log(err.message);
+	}
+}	
+
+*************************************************************************
+
+AJAX & APIS:
+
+AJAX - Asynchronous Javascript And Xml which is used to communicate with remote server to return values asynchronously.
+
+								HTTP REQUEST(GET, POST)
+your javascript app running   ---------------------------> Remote server(API)
+ on the client(browser)       <--------------------------
+										RESPONSE
+
+
+Making call using fetch & promise:
+
+getData() {
+ fetch('https://reqres.in/api/users?page=2')
+  .then((response) => {		// response is in readable stream, so we convert to json.
+    return response.json();
+  }).then((result) => {
+    let arr = result.data;
+    console.log(arr);
+  }).catch((error) => {
+    console.log(error);
+ });
+}
+
+getData();
+
+Making call using fetch & Async Await:
+
+async function getData() {
+ const result = await fetch('https://www.metaweather.com/api/location/44418/');
+ const data = await result.json();
+ return data;
+}
+
+getData().then((data) => {
+ console.log('data');
+});  // when we're getting error as cors policy(cross origin policy), we need to fix in api level such as in Spring provide @Crossorigin.
+
+******************************************* The end :) ******************************************************************
+
+
+					Modern Javascript
+
+Overview: 
+
+ 	Node JS: => Where we find 3rd party libraries & framework such as react, jquery, angular library for modern web development & also include tools for
+		task automation, automatic browser reloading.
+
+ 	NPM(Node Package Manager): => It uses command line interface to install those tools to interact with development.
+
+ 	Babel: => It is used to convert ES6, ES7, ES8 which are all together called as ESNext into ES5 which are supported by all browser using npm script.
+
+ 	Webpack: => when we use ES6 Modules, in order to make our code modular, easier to maintain & separating different assest of our app into different files.we have to bundles
+		all these into single files using module bundler called webpack.
+
+	.js	.png	.jpg
+				===>     .js	.css	.png	.jpg
+	.cjs	.sass	.less 
+	
+	putting it all together with an automated development setup using npm script.
+
+NPM: 
+
+ 1. we create a project folder as food-delivery
+
+ folder structure: food-delivery
+			|
+			--> src --> js --> index.js
+
+ 2. Open cmd, inside the food-delivery -> npm init
+	it will ask project name, version, description, entry point (index.js), author etc..
+	it will create package.json file inside root of project.
+	it will create node_modules folder.if we delete this folder simply run => npm install 
+		it will load node_modules based on inform provide in package.json.
+	
+	food-delivery
+			|
+			--> src --> js --> index.js
+			|
+			--> package.json
+
+	inside that package.json => 
+	
+	{
+  	  "name": "food_delivery",
+  	  "version": "1.0.0",
+	  "description": "Food Delivery System",
+	  "main": "index.js",
+	  "scripts": {
+	    "test": "echo \"Error: no test specified\" && exit 1"
+	  },
+	  "author": "Prakash_Kumar",
+	  "license": "ISC"
+	}
+
+ 3. After that we need to install webpack => npm install webpack --save-dev
+	it will load webpack inside the devDependencies in package.json.
+	install =>npm install webpack-cli --save-dev & also install => npm install webpack-dev-server --save-dev
+
+	{
+  	  "name": "food_delivery",
+  	  "version": "1.0.0",
+  	  "description": "Food Delivery System",
+  	  "main": "index.js",
+  	  "scripts": {
+    	    "test": "echo \"Error: no test specified\" && exit 1"
+  	 },
+  	 "author": "Prakash_Kumar",
+  	 "license": "ISC",
+  	 "devDependencies": {
+    	 "webpack": "^5.0.0-rc.3",
+	 "webpack-cli": "^3.3.12",
+	 "webpack-dev-server": "^3.11.0"
+  	 },
+  	 "dependencies": {}
+        }
+	
+
+	Difference b/w devDependencies & dependencies is devDependencies need only in time of development.where dependencies need in runtime.
+
+ 4. If we need live-server so npm install live-server --global
+	which install live-server in global, where we can access our file just typing live-server in cmd or using chrome http://127.0.0.1:8080/
+
+
+ 5. We have to create webpack.config.js at root of project which bundles all code which have 
+	entrypoints->output->loaders->plugins
+
+    webpack.config.js
+
+	const path = require('path');
+	
+	module.exports = {
+	 entry: './src/js/index.js', // this is the entry points which is to convert.
+	 output: {
+	  path: path.resolve(__dirname, './dist'), // this is where bundle.js stored.
+	  filename: 'js/bundle.js'  // this will run when application start either in devolopment or production mode.
+	 },
+	 mode: development // we can use here or in package.json inside script property.
+	 devServer: {
+	   contentBase: './dist'	// for webpack-dev-server to bundle up all content inside dist folder
+	 }
+	}
+
+   package.json
+
+	{
+  	  "name": "food_delivery",
+  	  "version": "1.0.0",
+  	  "description": "Food Delivery System",
+  	  "main": "index.js",
+  	  "scripts": {
+    	    "dev": "webpack --mode development",
+	    "build": "webpack --mode production",
+	    "start": "webpack-dev-server --mode development --open" //here we need to make server start automatic when code update.
+  	 },
+  	 "author": "Prakash_Kumar",
+  	 "license": "ISC",
+  	 "devDependencies": {
+    	 "webpack": "^5.0.0-rc.3",
+    	 "webpack-cli": "^3.3.12",
+    	 "webpack-dev-server": "^3.11.0"
+  	 },
+  	 "dependencies": {}
+        }
+	
+ --> src/index.html
+
+	<html>
+	 <head>
+	  <title>main</title>
+	 </head>
+	 <body>
+	  <script src="./src/js/index.js"></script>
+	 </body>
+	</html>
+
+ --> src/js/index.js
+
+	
+	import num from './test';
+	
+	console.log(`from test js ${num}`);
+
+
+ --> src/js/test.js
+	
+	export default 23;
+
+
+ --> dist/index.html
+
+	<html>
+	 <head>
+	  <title>main</title>
+	 </head>
+	 <body>
+	  <script src="./js/bundle.js"></script>
+	 </body>
+	</html>
+
+	If we run => npm run dev all js file was bundled as development mode.after success msg, we look bundle.js code look bit longer.
+	If we run => npm run build all js file was bundled as production mode.after success msg, we look bundle.js code look smaller than development mode.
+
+	Then we open the dist/index.html, it'll load screen & print => from test js 23 
+
+ --> after installing webpack-dev-server, run command to open up screen -> npm run start it'll open localhost://8080 & screen get loaded.
+
+
+ Now, we have to bundle up html also, so, run -> npm install html-webpack-plugin --save-dev
+
+ after that we need to add plugins in webpack-config.js
+
+	const HtmlWebpackPlugin = require('html-webpack-plugin')
+ 	plugins: [
+	  new  HtmlWebpackPlugin({
+	  	filename: 'index.html',
+		template: './src/index.html'	// when we load screen index.html file add to dist folder & inside script tag bundle.js automatically added to it.
+	  })
+	]
+
+  when we run -> npm run start & load screen index.html file add to dist folder & inside script tag bundle.js automatically added to it.so, intially dist folder is empty.
+
+ 6. Babel: It is used to convert ES6, ES7 & ES8 js modules back to ES5, which is compatible to all browser.
+
+  1=> we have to run => npm install @babel/core @babel/preset-env babel-loader --save-dev
+		    => npm install core-js@3 regenerator-runtime --save
+	
+	1. @babel/core --save-dev
+	2. @babel/preset-env --save-dev
+	3. babel-loader --save-dev
+
+	4. core-js@3 --save
+	5. regenerator-runtime --save
+
+  2=> after that, inside the webpack-config.js add loaders
+
+	module: {
+	  rules: [
+	    {
+	      test: /\.js$/,
+	      exclude: /node_modules/,
+	      use: {
+		loader: 'babel-loader'
+	      }
+            }
+	  ]
+	}
+
+  3=> create .babelrc config file
+
+	{
+    	  "presets": [
+        	["@babel/env", {
+            	     "useBuiltIns": "usage",
+            	     "corejs": "3",
+            	     "targets": {
+                	"browsers": [
+                  	   "last 5 version",
+                    	   "ie >= 8"
+                	]
+            	     }
+        	}]
+    	   ]		
+       }
+
+
+     Eventhough we install babel loader & .babelrc, it convert ES6 feature which are able to convert back to ES5. 
+ 	But feature not in ES5 such as promise not convert back it from ES6 to ES5, so we need babel polyfill.
+
+	=> npm install babel-polyfill --save
+
+	add entry point in webpack-config.js as
+
+		=> entry: ['babel-polyfill', './src/js/index.js'],
+
+*******************************************************************************************************************
+event.preventDefault() => prevent the default event yet to happen.
+
+document.querySelector('.checkbox').eventListener('click', event => {
+      event.preventDefault(); // it will prevent the checkbox to checked, when user clicked.
+})
+
+********************************************************************************
+targetElement.closest() 
+
+The closest() method traverses the Element and its parents (heading toward the document root) 
+  until it finds a node that matches the provided selector string. Will return itself or the matching ancestor. 
+  If no such element exists, it returns null.
+
+<article>
+  <div id="div-01">Here is div-01
+    <div id="div-02">Here is div-02
+      <div id="div-03">Here is div-03</div>
+    </div>
+  </div>
+</article>
+
+
+var el = document.getElementById('div-03');
+
+var r1 = el.closest("#div-02");
+// returns the element with the id=div-02
+
+var r2 = el.closest("div div");
+// returns the closest ancestor which is a div in div, here it is the div-03 itself
+
+var r3 = el.closest("article > div");
+// returns the closest ancestor which is a div and has a parent article, here it is the div-01
+
+var r4 = el.closest(":not(div)");
+// returns the closest ancestor which is not a div, here it is the outmost article
+
+*****************************************************************************************
+matches(): The matches() method checks to see if the Element would be selected by the provided selectorString 
+    -- in other words -- checks if the element "is" the selector.
+
+The browser which doesn't support closest() use matches().
+
+
+<ul id="birds">
+  <li>Orange-winged parrot</li>
+  <li class="endangered">Philippine eagle</li>
+  <li>Great white pelican</li>
+</ul>
+
+<script type="text/javascript">
+  var birds = document.getElementsByTagName('li');
+
+  for (var i = 0; i < birds.length; i++) {
+    if (birds[i].matches('.endangered')) {  // return true if the selector matches the classname provided
+      console.log('The ' + birds[i].textContent + ' is endangered!');
+    }
+  }
+</script>
+
+***********************************************************************************************
+		HTML
+
+rules:
+
+1. Use a font-size between 15 and 25 pixels for body text
+2. Use (really) big font sizes for headlines
+3. Use a line spacing between 120 and 150% of the font size
+4. 45 to 90 characters per line
+5. Use good fonts
+6. Chose a font which reflects the look and feel you want for your website
+7. Use only one font
+
+Using Colors Like a Pro
+
+1. Use only one base color
+2. Use a tool if you want to use more colors
+3. Use color to draw attention
+4. Never use black in your design
+5. Choose colors wisely
+
+Working with Images
+
+1. Put text directly on the image
+2. Overlay the image
+3. Put your text in a box
+4. Blur the image
+5. The floor fade
+
+Working with icons
+
+1. Use icons to list features/steps
+2. Use icons for actions and links
+3. Icons should be recognizable
+4. Label your icons
+5. Icons should not take a center stage
+6. Use icon fonts whenever possible
+
+Spacing and layout
+
+1. Put whitespace between your elements
+2. Put whitespace between your groups of elements
+3. Put whitespace between you website's sections
+4. Define where you want your audience to look first
+5. Establish a flow that corresponds to your content's message
+6. Use whitespace to build that flow
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

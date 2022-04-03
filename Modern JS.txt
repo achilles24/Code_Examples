@@ -1,0 +1,719 @@
+Code Anatomy - For loops, array reduce and method chaining
+
+For loops:
+
+const files = [ 'foo.txt ', '.bar', '   ', 'baz.foo' ];
+let filePaths = [];
+
+for (let file of files) {
+  const fileName = file.trim();
+  if(fileName) {
+    const filePath = `~/cool_app/${fileName}`;
+    filePaths.push(filePath);
+  }
+}
+
+// filePaths = [ '~/cool_app/foo.txt', '~/cool_app/.bar', '~/cool_app/baz.foo']
+
+1.Any for loop can be used - read more about the different JavaScript loops.
+2.Less common nowadays, due to functional programming being more popular.
+3.Control over the iteration, such as skipping over elements or early returns.
+4.Resulting array needs to be declared beforehand, outside the loop.
+5.Uses Array.prototype.push() or the spread (...) operator to add elements.
+6.O(N) complexity, each element will be iterated over only once.
+
+Array reduce:
+
+const files = [ 'foo.txt ', '.bar', '   ', 'baz.foo' ];
+
+const filePaths = files.reduce((acc, file) => {
+  const fileName = file.trim();
+  if(fileName) {
+    const filePath = `~/cool_app/${fileName}`;
+    acc.push(filePath);
+  }
+  return acc;
+}, []);
+
+// filePaths = [ '~/cool_app/foo.txt', '~/cool_app/.bar', '~/cool_app/baz.foo']
+
+1.Uses Array.prototype.reduce() with an empty array as the initial value.
+2.More common nowadays, due to functional programming being more popular.
+3.Less control over the iteration, cannot skip elements or return early.
+4.Can be chained with other methods, if necessary.
+5.Uses Array.prototype.push() or the spread (...) operator to add elements.
+6.O(N) complexity, each element will be iterated over only once.
+
+Method chaining:
+
+const files = [ 'foo.txt ', '.bar', '   ', 'baz.foo' ];
+const filePaths = files
+  .map(file => file.trim())
+  .filter(Boolean)
+  .map(fileName => `~/cool_app/${fileName}`);
+
+// filePaths = [ '~/cool_app/foo.txt', '~/cool_app/.bar', '~/cool_app/baz.foo']
+
+1.Uses Array.prototype.map() and Array.prototype.filter().
+2.More common nowadays, due to functional programming being more popular.
+3.Less control over the iteration, cannot skip elements or return early.
+4.Declarative, easier to read and refactor, chain can grow as necessary.
+5.Does not use Array.prototype.push() or the spread (...) operator.
+6.O(cN) complexity, c iterations per element, (c: length of the chain).
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+What is the difference between JavaScript's for...in, for...of and forEach?
+
+for...in:
+
+for...in is used to iterate over all enumerable properties of an object, including inherited enumerable properties. 
+This iteration statement can be used with arrays strings or plain objects, but not with Map or Set objects.
+
+for (let prop in ['a', 'b', 'c'])
+  console.log(prop);            // 0, 1, 2 (array indexes)
+
+for (let prop in 'str')
+  console.log(prop);            // 0, 1, 2 (string indexes)
+
+for (let prop in {a: 1, b: 2, c: 3})
+  console.log(prop);            // a, b, c (object property names)
+
+for (let prop in new Set(['a', 'b', 'a', 'd']))
+  console.log(prop);            // undefined (no enumerable properties)
+
+for...of:
+
+for...of is used to iterate over iterable objects, iterating over their values instead of their properties. 
+This iteration statement can be used with arrays, strings, Map or Set objects, but not with plain objects.
+
+for (let val of ['a', 'b', 'c'])
+  console.log(val);            // a, b, c (array values)
+
+for (let val of 'str')
+  console.log(val);            // s, t, r (string characters)
+
+for (let val of {a: 1, b: 2, c: 3})
+  console.log(prop);           // TypeError (not iterable)
+
+for (let val of new Set(['a', 'b', 'a', 'd']))
+  console.log(val);            // a, b, d (Set values)
+
+forEach():
+
+Finally, forEach() is a method of the Array prototype, which allows you to iterate over the elements of an array. While forEach() only iterates over arrays, 
+it can access both the value and the index of each element while iterating.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+How do I convert an iterable to an array in JavaScript?
+
+String:
+When the spread operator is applied to a string, the result is an array of strings each one representing a character of the original string:
+
+	const name = 'Zelda';
+	const letters = [...name]; // 'Z', 'e', 'l', 'd', 'a'
+
+
+Set:
+A Set is a collection of unique values. When the spread operator is applied to it, the result is an array of the stored values:
+
+	const data = [1, 2, 3, 1, 2, 4]
+	const values = new Set(data);
+	const uniqueValues = [...values]; // [1, 2, 3, 4]
+
+	const name = "prakash";
+	const unique = new Set([...name]);
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Tip: Use JavaScript for loops if you need to break out early
+
+The usefulness of the humble for loop in modern JavaScript is rarely talked about. Apart from it being particularly useful in asynchronous operation scenarios, 
+it can also make your code a lot more performant shall you need to break out of a loop early. Consider the following example:
+
+	const smallArray = [0, 2];
+	const largeArray = Array.from({ length: 10 }, (_, i) => i); // [0,1,2,3,4,5,6,7,8,9]
+
+	const areEqual = (a, b) => {
+  	let result = true;
+  	a.forEach((x, i) => {
+    	if (!result) return;
+    	if (b[i] === undefined || x !== b[i]) result = false;
+  	});
+  	return result;
+	}
+
+	areEqual(largeArray, smallArray); // false
+	// Will loop over all items in `largeArray`
+
+Obviously, the code isn't optimized, but it highlights the issue of array methods, such as Array.prototype.forEach() being unable to break out of the loop early. 
+To counteract this, we could use a for loop and an early return instead:
+
+	const smallArray = [0, 2];
+	const largeArray = Array.from({ length: 1000 }, (_, i) => i);
+
+	const areEqual = (a, b) => {
+  	for (let i in a) {
+    	if (b[i] === undefined || a[i] !== b[i]) return false;
+  	}
+  	return true;
+	}
+
+	areEqual(largeArray, smallArray); // false
+	// Will only loop until the first mismatch is encountered
+
+	let arr = [1, 2, 3, 4, 5, 6]
+
+	const check = (arrr) => {
+    	  arrr.forEach((x,i)=> {
+     	    if(x===5) return;
+     	    console.log(x)
+    	  })
+	}
+
+	check(arr) // 1 2 3 4 6 it will looped through whole array didn't return when it fails.
+
+	const check = (arrr) => {
+    	  for (let z in arrr) {
+            if(arrr[z]===5) return;
+            console.log(arrr[z])
+    	  }
+	}
+
+	check(arr) // 1 2 3 4  it will looped until condition met & return when it fails.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Native JavaScript Data Structures:
+	
+Arrays:
+	An array is a linear data structure that represents a collection of elements. 
+	In JavaScript, arrays don't have a fixed size, while their contents can be of any valid type, even arrays themselves. 
+	Arrays are probably the most commonly used data structure and come with a plethora of methods that allow easy manipulation and transformation of their contents.
+
+const nums = [1, 2, 3];
+const strs = Array.from('est');
+
+nums.push(6);
+nums.push(4, 9);
+strs.unshift('t');
+
+nums.length;                     // 6
+nums[nums.length - 1];           // 9
+strs[0];                         // 't'
+strs[2];                         // 's'
+
+nums.slice(1, 3);                // [2, 3]
+nums.map(n => n * 2);            // [2, 4, 6, 12, 8, 18]
+nums.filter(n => n % 2 === 0);   // [2, 6, 4]
+nums.reduce((a, n) => a + n, 0); // 25
+
+strs.reverse();                  // ['t', 's', 'e', 't']
+strs.join('');                   // 'test'
+
+Sets:
+	A set is a linear data structure that represents an ordered collection of unique values. 
+	Sets in JavaScript can store any valid type of value, however each value can only occur once based on value equality checking.
+
+const nums = new Set([1, 2, 3]);
+
+nums.add(4);
+nums.add(1);
+nums.add(5);
+nums.add(4);
+
+nums.size;                       // 5
+nums.has(4);                     // true
+
+nums.delete(4);
+nums.has(4);                     // false
+
+[...nums];                       // [1, 2, 3, 5]
+
+nums.clear();
+nums.size;                       // 0
+
+Maps:
+	A map is an associative data structure that represents a keyed collection of elements. 
+	Each key in a JavaScript Map has to be unique and either a primitive value or an object, whereas the values of the map can be of any valid type.
+
+const items = new Map([
+  [1, { name: 'John' }],
+  [2, { name: 'Mary' }]
+]);
+
+items.set(4, { name: 'Alan' });
+items.set(2, { name: 'Jeff' });
+
+items.size;                      // 3
+items.has(4);                    // true
+items.get(2);                    // { name: 'Jeff' }
+
+items.delete(2);
+items.size;                      // 2
+
+[...items.keys()];               // [1, 4]
+[...items.values()];             // [{ name: 'John' }, { name: 'Alan' }]
+
+items.clear();
+items.size;                      // 0
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Where and how can I use the destructuring assignment syntax in JavaScript?
+
+Array destructuring:
+	Destructuring an array is very straightforward. All you have to do is declare a variable for each value in the sequence. 
+	You can define fewer variables than there are indexes in the array (i.e. if you only want to unpack the first few values), 
+	skip some indexes or even use the rest pattern to unpack any remaining values into a new array.
+
+const nums = [ 3, 6, 9, 12, 15 ];
+const [
+  k,              // k = 3
+  l,              // l = 6
+  ,               // Skip a value (9)
+  ...n            // n = [12, 15]
+] = nums;
+
+
+Object destructuring:
+	Object destructuring is pretty similar to array destructuring, the main difference being that you can reference each key in the object by name, 
+	creating a variable with the same name. Additionally, you can also unpack a key to a new variable name, 
+	unpack only the keys you need and use the rest pattern to unpack remaining keys into a new object.
+
+const obj = { a: 1, b: 2, c: 3, d: 4 };
+const {
+  a,              // a = 1
+  c: d,           // d = 3
+  ...rest         // rest = { b: 2, d: 4 }
+} = obj
+
+Advanced destructuring:
+As arrays act much like objects, it's possible to use the destructuring assignment syntax to get specific values from an array by using the index as a key in an object destructuring
+assignment. Additionally, using this method, you can get other properties of the array (e.g. its length). 
+Finally, you can also define default values for variables in a destructuring assignment, in case the unpacked value is undefined.
+
+const arr = [ 5, 'b', 4, 'd', 'e', 'f', 2 ];
+const {
+  6: x,           // x = 2
+  0: y,           // y = 5
+  2: z,           // z = 4
+  length: count,  // count = 7
+  name = 'array', // name = 'array' (not present in arr)
+  ...restData     // restData = { '1': 'b', '3': 'd', '4': 'e', '5': 'f' }
+} = arr;
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Spread syntax:
+	The spread operator (...) allows you to expand a single array into its values. Some common use-cases for the spread operator include:
+
+1.Expanding an array's values to pass them as arguments to a function that does not accept an array.
+2.Cloning an array by spreading its values into a new array ([]).
+3.Concatenating arrays by spreading them into a new array ([]).
+4.Flattening an array of arrays one level, by spreading nested arrays.
+5.Converting a non-array iterable (e.g. a string or a Set) to an array.
+
+// Array's values as arguments
+const a = [1, 2, 3];
+Math.max(...a); // 3
+
+// Clone an array
+const b = [4, 5, 6];
+const c = [...b]; // c = [4, 5, 6], b !== c
+
+// Concatenate two arrays
+const d = [...a, ...b]; // d = [1, 2, 3, 4, 5, 6]
+
+// Flatten an array
+const e = [[1, 2], [3, 4]];
+const f = [...e[0], ...e[1]]; // f = [1, 2, 3, 4]
+
+// Convert iterable to array
+const g = [...'hello']; // g = ['h', 'e', 'l', 'l', 'o']
+
+
+Rest syntax:
+	The rest parameter syntax allows you to collapse any remaining arguments into an array. While it looks very similar to the spread operator, 
+	the rest parameter syntax is only used in function declarations (arrow or otherwise).
+
+// Rest parameter syntax, not to be confused with the spread operator
+const fn = (str, ...nums) => `${str}_${nums.join('')}`;
+fn('hi', 1, 2, 3); // 'hi_123', `nums` will be [1, 2, 3]
+
+const data = [4, 5, 6];
+// Spread operator, expanding the array
+fn('hey', ...data); // 'hey_456', `nums` will be [4, 5, 6]
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Tip: Get the index of an array item in a JavaScript for...of loop:
+
+JavaScript's for...of loops provide an easy way to iterate over all kinds of iterables from arrays and stings to Map and Set objects. 
+One supposed limitation over other options (e.g. Array.prototype.forEach()) is that you only get the value of each item in the iterable. 
+But that is not necessarily the case, as you can easily leverage Array.prototype.entries() to get both the index and value of each array item:
+
+const items = ['a', 'b', 'c'];
+
+for (let [index, item] of items.entries()) {
+  console.log(`${index}: ${item}`);
+}
+// LOGS: 0: a, 1: b, 2: c
+
+Moreover, you can use the spread operator (...) to convert a string into an array and then use Array.prototype.entries() the same way. 
+Finally, both Map and Set prototypes provide a similar method (Map.prototype.entries() and Set.prototype.entries() respectively), which can be used the exact same way.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Object Methods:
+
+Object.assign()
+	It is used to copy the values of all enumerable own properties from one or more source object to a target object.
+	Objects are assigned & copied by reference.
+
+Object.assign(target, sources)
+const obj = {a:11, b:22, c:33};
+const obj2 = Object.assign(obj, {c: 44, d: 55}); // {a: 11, b: 22, c: 44, d: 55}
+
+
+Object.create()
+	The Object.create() method creates a new object, using an existing object as the prototype of the newly created object.
+
+Object.create(proto)
+Object.create(proto, propertiesObject)
+
+const person = {
+  isHuman: false,
+  printIntroduction: function() {
+    console.log(`My name is ${this.name}. Am I human? ${this.isHuman}`);
+  }
+};
+
+const me = Object.create(person);
+
+me.name = 'Matthew'; // "name" is a property set on "me", but not on "person"
+me.isHuman = true; // inherited properties can be overwritten
+
+me.printIntroduction();
+// expected output: "My name is Matthew. Am I human? true"
+
+
+Object.freeze()
+	The Object.freeze() method freezes an object. 
+	A frozen object can no longer be changed; freezing an object prevents new properties from being added to it, 
+	existing properties from being removed, prevents changing the enumerability, configurability, or writability of existing properties, 
+	and prevents the values of existing properties from being changed. In addition, freezing an object also prevents its prototype from being changed. 
+	freeze() returns the same object that was passed in.
+
+const obj = {
+  prop: 42
+};
+
+Object.freeze(obj);
+
+obj.prop = 33;
+// Throws an error in strict mode
+
+console.log(obj.prop);
+// expected output: 42
+
+
+Object.entries()
+	The Object.entries() method returns an array of a given object's own enumerable string-keyed property [key, value] pairs.
+
+const object1 = {
+  a: 'somestring',
+  b: 42
+};
+
+for (const [key, value] of Object.entries(object1)) {
+  console.log(`${key}: ${value}`);
+}
+
+// expected output:
+// "a: somestring"
+// "b: 42"
+
+
+Object.values()
+	The Object.values() method returns an array of a given object's own enumerable property values in the same order as that provided by a for...in loop.
+
+const object1 = {
+  a: 'somestring',
+  b: 42,
+  c: false
+};
+
+console.log(Object.values(object1)); // expected output: Array ["somestring", 42, false]
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Javascript hacks:
+
+1.Remove falsy values from array:
+	Passing Boolean in filter() will remove all falsy values that is undefined, null. 0. ""(empty string), NaN & false from any arrar.
+
+let nameArr = ["prakash", 0, null, false, "kumar", true];
+let result = nameArr.filter(Boolean);
+console.log(result) // ["prakash", "kumar", true]
+
+2.Convert any value to boolean:
+	Using !! in front of any value will convert that value to boolean.
+	Doing !!value is same as Boolean(value)
+
+console.log(!!"String"); // true
+console.log(!!0); // false
+console.log(!!1); // true
+console.log(!!undefined); // true
+
+3.Resizing array:
+	We can resize array using its length property.
+let arr = ["prakash", "kumar", "achilles"]
+arr.length = 2;
+console.log(arr); // ["prakash", "kumar"]
+
+4.Flatten multi-dimensional arrays:
+	We can easily faltten multi-dimensional arrays using flat() method. but flat() method only flattens the first level in multi-dimensional array.
+	But we can flatten any level by passing "infinity" in the flat() method.
+
+let onelevel = [[1,2],3,4,[5,6]];
+let multilevel = [[1,2],3,[4,[5,6]]];
+onelevel.flat() // [1,2,3,4,5,6]
+multilevel.flat(infinity) // [1,2,3,4,5,6]
+
+5.Short Conditionals:
+	We can take use of && (AND operator) and || (OR operator) to shorten some conditionals
+
+let person = "prakash";
+if(!!person) {
+console.log(person); // instead of this
+}
+!!person && console.log(person) // we can do this for condition true
+
+
+let person = "prakash";
+if(person != "prakash") {
+console.log(clear); // instead of this
+}
+!!person || console.log(person) // we can do this for condition false
+
+6.Replace all occurance of a string:
+	with replace() method including regex(with g modifier) we can replace all occurance of string.
+
+let sentence = "hi i'm prakash, full name is prakash kumar"
+sentence.replace(/prakash/, "achilles") // "hi i'm achilles, full name is prakash kumar"
+sentence.replace(/prakash/g, "achilles") // "hi i'm achilles, full name is achilles kumar"
+sentence.replaceAll(/prakash/g, "achilles") // "hi i'm achilles, full name is achilles kumar"
+
+7.Check performance of any task
+	we can use performance.now() method to check howmuch milliseconds it took to complete specific task
+
+let time0 = performance.now();
+for(i=0; i<500; i++) {
+	console.log(i);
+}
+let time1 = performance.now();
+console.log(`loop took ${time1- time0} millisecond to take`);
+
+8.Log values with variable names:
+	we can basically wrap your console.log() argument with curly brackets to see variable names in console.
+
+let name = "prakash";
+console.log({name}) // {name: "prakash"}
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+Property getters and setters: 
+
+let user = {
+  name: "John",
+  surname: "Smith",
+
+  get fullName() {
+    return `${this.name} ${this.surname}`;
+  },
+
+  set fullName(value) {
+    [this.name, this.surname] = value.split(" ");
+  }
+};
+
+// set fullName is executed with the given value.
+user.fullName = "Alice Cooper";
+
+alert(user.name); // Alice
+alert(user.surname); // Cooper
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+JSON.stringify():
+
+const user = {
+  id: 1234,
+  username: 'johnsmith',
+  name: 'John Smith',
+  age: 39
+};
+
+user 	// {id: 1234, username: 'johnsmith', name: 'John Smith', age: 39}
+JSON.stringify(user) 	// '{"id":1234,"username":"johnsmith","name":"John Smith","age":39}' to get stringify value
+JSON.stringify(user, [username, name])	// '{"username":"johnsmith","name":"John Smith"}' to get particular value as stringify value
+
+if we use JSON.stringify to get object containing property as other object for eg:
+
+class Person{
+ constructor(name, age) {
+  this.name = name;
+  this.age = age;
+ }
+}
+
+const employee = {
+id: 1,
+person: new Person(ali,24)
+}
+
+JSON.stringify(employee, ['person']) 	// '{"person":{}}' it will get corresponding property but not get value, to overcome this we use replacer function
+
+JSON.stringify(employee, (key, value) => {
+  // Exclude id
+  if (key === 'id') return undefined;
+  // Convert person to an array of values
+  if (value instanceof Person) return [value.name, value.age];
+  // Return other properties (i.e. name) without modification
+  return value;
+});
+
+'{"person":["ali",24]}'	// above function avoids id property & get person property object.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+reduceWhich: Returns the minimum/maximum value of an array
+
+Returns the minimum/maximum value of an array, after applying the provided function to set the comparing rule.
+
+1.Use Array.prototype.reduce() in combination with the comparator function to get the appropriate element in the array.
+2.Omit the second argument, comparator, to use the default one that returns the minimum element in the array.
+
+const reduceWhich = (arr, comparator = (a, b) => a - b) =>
+  arr.reduce((a, b) => (comparator(a, b) >= 0 ? b : a));
+
+reduceWhich([1, 3, 2]); // 1 min
+reduceWhich([1, 3, 2], (a, b) => b - a); // 3 max
+reduceWhich(
+  [
+    { name: 'Tom', age: 12 },
+    { name: 'Jack', age: 18 },
+    { name: 'Lucy', age: 9 }
+  ],  (a, b) => a.age - b.age); // {name: 'Lucy', age: 9}
+reduceWhich(
+  [
+    { name: 'Tom', age: 12 },
+    { name: 'Jack', age: 18 },
+    { name: 'Lucy', age: 9 }
+  ],  (a, b) => b.age - a.age); // {name: 'Jack', age: 18}
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Pull => Mutates the original array to filter out the values specified.:
+
+1.Use Array.prototype.filter() and Array.prototype.includes() to pull out the values that are not needed.
+2.Set Array.prototype.length to mutate the passed in an array by resetting its length to 0.
+3.Use Array.prototype.push() to re-populate it with only the pulled values.
+
+const pull = (arr, ...args) => {
+  let argState = Array.isArray(args[0]) ? args[0] : args;
+  let pulled = arr.filter(v => !argState.includes(v));
+  //arr.length = 0; 	// if don't cange original array mean remove these two lines
+  //pulled.forEach(v => arr.push(v));
+};
+
+let myArray = ['a', 'b', 'c', 'a', 'b', 'c'];
+pull(myArray, 'a', 'c'); // myArray = [ 'b', 'b' ]
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Asynchronous array loops in JavaScript:
+
+Asynchronous operations seem to trip up a lot of developers. 
+This is especially true when combined with looping over arrays, as there are some caveats that come with each option available.
+
+For loops: 
+	Combining async with a for (or a for...of) loop is possibly the most straightforward option when performing asynchronous operations over array elements. 
+	Using await inside a for loop will cause the code to stop and wait for the asynchronous operation to complete before continuing. 
+	This means that all promises will be run sequentially.
+
+const asyncUppercase = item =>
+  new Promise(resolve =>
+    setTimeout(
+      () => resolve(item.toUpperCase()),
+      Math.floor(Math.random() * 1000)
+    )
+  );
+
+const uppercaseItems = async () => {
+  const items = ['a', 'b', 'c'];
+  for (item of items) {
+    const uppercaseItem = await asyncUppercase(item);
+    console.log(uppercaseItem);
+  }
+
+  console.log('Items processed');
+};
+
+uppercaseItems();
+// LOGS: 'A', 'B', 'C', 'Items processed'
+
+Promises:
+	Promise.all() provides another option for asynchronous loops over arrays. 
+	The main difference with the previous one is that Promise.all() executes all asynchronous operations in parallel. 
+	This means that promises will execute out of order, which might be an issue in some cases. 
+	Most often than not, this is my preferred solution as it's quite uncommon to want promises to execute sequentially.
+
+const asyncUppercase = item =>
+  new Promise(resolve =>
+    setTimeout(
+      () => resolve(item.toUpperCase()),
+      Math.floor(Math.random() * 1000)
+    )
+  );
+
+const uppercaseItems = () => {
+  const items = ['a', 'b', 'c'];
+  return Promise.all(
+    items.map(async item => {
+      const uppercaseItem = await asyncUppercase(item);
+      console.log(uppercaseItem);
+    })
+  ).then(() => {
+    console.log('Items processed');
+  });
+};
+
+// LOGS: 'A', 'C', 'B', 'Items processed'
+
+Array methods:
+	Unfortunately, array methods such as Array.prototype.forEach() do not work well with async/await. 
+	The only viable solution is to use Promise.all() as shown in the previous example. 
+	Using an async callback with Array.prototype.forEach() will result in the rest of the code executing and the asynchronous operations not being awaited for.
+
+const asyncUppercase = item =>
+  new Promise(resolve =>
+    setTimeout(
+      () => resolve(item.toUpperCase()),
+      Math.floor(Math.random() * 1000)
+    )
+  );
+
+const uppercaseItems = async () => {
+  const items = ['a', 'b', 'c'];
+  await items.forEach(async item => {
+    const uppercaseItem = await asyncUppercase(item);
+    console.log(uppercaseItem);
+  });
+
+  console.log('Items processed');
+};
+
+uppercaseItems();
+// LOGS: ''Items processed', 'B', 'A', 'C'
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,0 +1,818 @@
+Create React App uses Webpack with html-webpack-plugin.
+
+Our configuration specifies that Webpack uses src/index.js as an “entry point”. So that’s the first module it reads, and it follows from it to other modules to compile them into a single bundle.
+
+When webpack compiles the assets, it produces a single (or several if you use code splitting) bundles. It makes their final paths available to all plugins. We are using one such plugin for injecting scripts into HTML.
+
+We have enabled html-webpack-plugin to generate the HTML file. In our configuration, we specified that it should read public/index.html as a template. We have also set inject option to true. With that option, html-webpack-plugin adds a <script> with the path provided by Webpack right into the final HTML page. This final page is the one you get in build/index.html after running npm run build, and the one that gets served from / when you run npm start.
+
+Thunk:
+The word "thunk" is a programming term that means "a piece of code that does some delayed work".
+The thunk middleware allows us to write functions that get dispatch and getState as arguments. The thunk functions can have any async logic we want inside, and that logic can dispatch actions and read the store state as needed.
+
+What is React? 
+1. React is a client side javascript library & use for building User Interface.
+2. It make building complex Interative & reactive User Interface simpler.
+3. It is Decalartive work based on component focused approach for building SPA's.
+
+what is Jsx?
+1. It is syntax extension to javascript.
+2. It stands for Javascript xml.
+3. It allows directly write html in React (within javascript codes) & easy to create templates.
+4. It is faster than normal JavaScript as it performs optimizations while translating to regular JavaScript.
+
+Why can’t browsers read JSX?
+Browsers can only read JavaScript objects but JSX in not a regular JavaScript object. 
+Thus to enable a browser to read JSX, first, we need to transform JSX file into a JavaScript object using JSX transformers like Babel and then pass it to the browser.
+
+Characteristics of JSX?
+1. JSX makes it easier to develop react application.
+2. JSX allows writing expression in { }. The expression can be any JS expression or React variable.
+3. To insert a large block of HTML we have to write it in a parenthesis i.e, ().
+4. JSX produces react elements.
+5. JSX follows XML rule.
+5. After compilation, JSX expressions become regular JavaScript function calls.
+6. JSX uses camelcase notation for naming HTML attributes. For example, tabindex in HTML is used as tabIndex in JSX.
+
+Advantages of JSX?
+1. JSX makes it easier to write or add HTML in React.
+2. JSX can easily convert HTML tags to react elements.
+3. It is faster than regular JavaScript.
+4. JSX allows us to put HTML elements in DOM without using appendChild() or createElement() method.
+5. As JSX is an expression, we can use it inside of if statements and for loops, assign it to variables, accept it as arguments, or return it from functions.
+6. JSX prevents XSS (cross-site-scripting) attacks popularly known as injection attacks. It is type-safe, and most of the errors can be found at compilation time.
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+DOM vs Virtual Dom?
+
+DOM ->
+	The DOM is an abstraction of a page’s HTML structure. It takes HTML elements and wraps them in an object with a tree-structure for those nested HTML elements. 
+	This provides an API that allows us to traverse nodes (HTML elements) and manipulate them — such as adding nodes, removing nodes, editing a node’s content, etc.
+	
+Virtual DOM -> 
+	The Virtual DOM is a light-weight abstraction of the DOM.it is a copy of the DOM, that can be updated without affecting the actual DOM.
+	Virtual DOM is pure JS file and light weight, So capturing any update in Virtual DOM is much faster than directly updating on Real DOM.
+	It has all the same properties as the real DOM object, but doesn’t have the ability to write to the screen like the real DOM. 
+	The virtual DOM gains it’s speed and efficiency from the fact that it’s lightweight. In fact, a new virtual DOM is created after every re-render.
+	Reconciliation is a process to compare and keep in sync the two files (Real and Virtual DOM). Diffing algorithm is a technique of reconciliation which is used by React.
+	
+How does updates work in React?
+1. On the first load, ReactDOM.render() will create the Virtual DOM tree and real DOM tree.
+2. As React works on Observable patterns, when any event(like key press, left click, api response, etc.) occurred, Virtual DOM tree nodes are notified for props change, 
+3. If the properties used in that node are updated, the node is updated else left as it is.
+4. React compares Virtual DOM with real DOM and updates real DOM. This process is called Reconciliation. React uses Diffing algorithm techniques of Reconciliation.
+5. Virtual DOM is pure JS file and light weight, So capturing any update in Virtual DOM is much faster than directly updating on Real DOM.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+In React, everything is a component.” Explain.
+Components are the building blocks of a React application’s UI. 
+These components split up the entire UI into small independent and reusable pieces. 
+Then it renders each of these components independent of each other without affecting the rest of the UI.
+
+What is the purpose of render() in React.
+Each React component must have a render() mandatorily. 
+It returns a single React element which is the representation of the native DOM component. 
+If more than one HTML element needs to be rendered, then they must be grouped together inside one enclosing tag such as <form>, <group>,<div> etc. 
+This function must be kept pure i.e., it must return the same result each time it is invoked.
+
+What is Props?
+Props is the shorthand for Properties in React. 
+Props are an object which stores the value of attributes of a tag & work similar to HTML attributes.
+They are read-only inputs to components which must be kept pure i.e. immutable. 
+They are always passed down from the parent to the child components throughout the application. A child component can never send a prop back to the parent component. 
+This help in maintaining the unidirectional data flow and are generally used to render the dynamically generated data.
+
+What is a state in React and how is it used?
+States are the heart of React components. State are the source of data and must be kept as simple as possible. 
+Basically, state are the objects which determine components rendering and behavior. 
+They are mutable unlike the props and create dynamic and interactive components. They are accessed via this.state().
+
+Differentiate between states and props. (RIPACSRE)
+ Props vs  State
+
+1.	Props are read-only.																State changes can be asynchronous.
+2.	Props are immutable.																State is mutable.
+3.	Props allow you to pass data from one component to other components as an argument.	State holds information about the components.
+4.	Props can be accessed by the child component.										State cannot be accessed by child components.
+5.	Props are used to communicate between components.									States can be used for rendering dynamic changes with the component.
+6.	The stateless component can have Props.												The stateless components cannot have State.
+7.	Props make components reusable.														The State cannot make components reusable.
+8.	Props are external and controlled by whatever renders the component.				The State is internal and controlled by the component itself.
+
+
+stateless vs stateful
+Stateless Component	Stateful Component
+
+1.	The stateless components do not hold or manage state.									The stateful components can hold or manage state.
+2.	It does not contain the knowledge of past, current, and possible future state changes.	It can contain the knowledge of past, current, and possible future changes in state.
+3.	It is also known as a functional component.												It is also known as a class component.
+4.	It is simple and easy to understand.													It is complex as compared to the stateless component.
+5.	It does not work with any lifecycle method of React.									It can work with all lifecycle method of React.
+6.	The stateless components cannot be reused.												The stateful components can be reused.
+
+"A common pattern is to create several stateless components that just render data, 
+and have a stateful component above them in the hierarchy that passes its state to its children via props. 
+The stateful component encapsulates all of the interaction logic, while the stateless components take care of rendering data in a declarative way."
+
+What is arrow function in React? How is it used?
+	If you need to use arrow functions, it is not necessary to bind any event to 'this.' 
+	Here, the scope of 'this' is global and not limited to any calling function. So If you are using Arrow Function, there is no need to bind 'this' inside the constructor. 
+	It is also called 'fat arrow '(=>) functions.
+	
+the difference between controlled and uncontrolled components?
+Controlled	Uncontrolled
+1.	It does not maintain its internal state.				It maintains its internal states.
+2.	Here, data is controlled by the parent component.		Here, data is controlled by the DOM itself.
+3.	It accepts its current value as a prop.					It uses a ref for their current values.
+4.	It allows validation control.							It does not allow validation control.
+5.	It has better control over the form elements and data.	It has limited control over the form elements and data.
+
+the significance of keys in React?
+	A key is a unique identifier. 
+	In React, it is used to identify which items have changed, updated, or deleted from the Lists. 
+	It is useful when we dynamically created components or when the users alter the lists. 
+	It also helps to determine which components in a collection needs to be re-rendered instead of re-rendering the entire set of components every time. It increases application performance.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+The Component Lifecycle:
+Three phases:
+
+1. Initial - In this phase, a component contains the default Props and initial State. These default properties are done in the constructor of a component.
+2. Mounting - In this phase, the instance of a component is created and added into the DOM.
+3. Updating - In this phase, we get new Props and change State. This phase can potentially update and re-render only when a prop or state change occurs.
+4. Unmounting - the final phase of the React lifecycle, where the component instance is destroyed and unmounted(removed) from the DOM.
+
+1. Mounting
+
+1. constructor()
+2. static getDerivedStateFromProps()
+3. render()
+4. componentDidMount()
+
+2. Updating
+
+1. static getDerivedStateFromProps()
+2. shouldComponentUpdate()
+3. render()
+4. getSnapshotBeforeUpdate()
+5. componentDidUpdate()
+
+3. Unmounting
+
+1. componentWillUnmount()
+
+Mounting
+
+1. constructor
+	The constructor for a React component is called before it is mounted.
+	If you don’t initialize state and you don’t bind methods, you don’t need to implement a constructor for your React component.
+	
+	constructor(props) {
+	  super(props);
+	  // Don't call this.setState() here!
+	  this.state = { counter: 0 };
+	  this.handleClick = this.handleClick.bind(this);
+	}
+	
+2. static getDerivedStateFromProps(props, state)
+	getDerivedStateFromProps is invoked right before calling the render method, both on the initial mount and on subsequent updates. 
+	It should return an object to update the state, or null to update nothing.
+
+3. render()
+	The render() method is the only required method in a class component.
+	When called, it should examine this.props and this.state and return react element & fragment.
+	
+	The render() function should be pure, meaning that it does not modify component state, it returns the same result each time it’s invoked,
+	and it does not directly interact with the browser.
+
+	If you need to interact with the browser, perform your work in componentDidMount() or the other lifecycle methods instead.
+	Keeping render() pure makes components easier to think about.
+
+	render() will not be invoked if shouldComponentUpdate() returns false.
+	
+4. componentDidMount()
+	componentDidMount() is invoked immediately after a component is mounted (inserted into the tree) or rendered. Initialization that requires DOM nodes should go here. 
+	If you need to load data from a remote endpoint, this is a good place to instantiate the network request.
+	This method is a good place to set up any subscriptions. If you do that, don’t forget to unsubscribe in componentWillUnmount().
+	
+	You may call setState() immediately in componentDidMount(). It will trigger an extra rendering, but it will happen before the browser updates the screen. 
+	This guarantees that even though the render() will be called twice in this case, the user won’t see the intermediate state. 
+	Use this pattern with caution because it often causes performance issues. In most cases, you should be able to assign the initial state in the constructor() instead. 
+	It can, however, be necessary for cases like modals and tooltips when you need to measure a DOM node before rendering something that depends on its size or position.
+	
+1. Updating
+
+1. componentDidUpdate(prevProps, prevState, snapshot)
+	componentDidUpdate() is invoked immediately after updating occurs. This method is not called for the initial render.
+	Use this as an opportunity to operate on the DOM when the component has been updated. 
+	This is also a good place to do network requests as long as you compare the current props to previous props
+
+	componentDidUpdate(prevProps) {
+	  // Typical usage (don't forget to compare props):
+	  if (this.props.userID !== prevProps.userID) {
+		this.fetchData(this.props.userID);
+	  }
+	}
+	
+	You may call setState() immediately in componentDidUpdate() but note that it must be wrapped in a condition like in the example above, 
+	or you’ll cause an infinite loop. It would also cause an extra re-rendering which, while not visible to the user, can affect the component performance.
+	
+1. Unmounting
+
+1. componentWillUnmount()
+	componentWillUnmount() is invoked immediately before a component is unmounted and destroyed. 
+	Perform any necessary cleanup in this method, such as invalidating timers, canceling network requests, or cleaning up any subscriptions that were created in componentDidMount().
+	
+Error boundaries
+	Error boundaries are React components that catch JavaScript errors anywhere in their child component tree, log those errors, 
+	and display a fallback UI instead of the component tree that crashed. 
+	Error boundaries catch errors during rendering, in lifecycle methods, and in constructors of the whole tree below them.
+	
+	A class component becomes an error boundary if it defines either (or both) of the lifecycle methods static getDerivedStateFromError() or componentDidCatch(). 
+	
+	1. static getDerivedStateFromError(error)
+		getDerivedStateFromError() is called during the “render” phase, so side-effects are not permitted. For those use cases, use componentDidCatch() instead.
+	
+	This lifecycle is invoked after an error has been thrown by a descendant component. It receives the error that was thrown as a parameter and should return a value to update state.
+	
+	
+	2. componentDidCatch(error, info)
+		This lifecycle is invoked after an error has been thrown by a descendant component. It receives two parameters:
+
+			error - The error that was thrown.
+			info - An object with a componentStack key containing information about which component threw the error.
+		componentDidCatch() is called during the “commit” phase, so side-effects are permitted. It should be used for things like logging errors:
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		
+Refs
+	Refs is the short hand for References in React. It is an attribute which helps to store a reference to a particular React element or component,
+	It is used to return references to a particular element or component returned by render(). 
+	
+		class ReferenceDemo extends React.Component{
+			 display() {
+				 const name = this.inputDemo.value;
+				 document.getElementById('disp').innerHTML = name;
+			 }
+			 render() {
+				return(        
+					<div>
+						Name: <input type="text" ref={input => this.inputDemo = input} />
+						<button name="Click" onClick={this.display}>Click</button>            
+						<h2>Hello <span id="disp"></span> !!!</h2>
+					</div>
+				);
+		    }
+		}
+		
+	cases when you should use Refs.	
+		When you need to manage focus, select text or media playback
+		To trigger imperative animations
+		Integrate with third-party DOM libraries
+		
+Controlled vs Uncontrolled Components
+
+1. They do not maintain their own state														1. They maintain their own state
+2. Data is controlled by the parent component												2. Data is controlled by the DOM
+3. They take in the current values through props and then notify the changes via callbacks	3. Refs are used to get their current values
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+HOC - Higher-Order Components
+	A higher-order component (HOC) is an advanced technique in React for reusing component logic.
+	
+	const EnhancedComponent = higherOrderComponent(WrappedComponent);
+	
+	A higher-order component is a function that takes a component as arguments and returns a new component.
+	
+	import React from 'react'
+
+	const higherOrderComponent = (WrappedComponent) => {
+	  class HOC extends React.Component {
+		render() {
+		  return <WrappedComponent />
+		}
+	  }
+	  return HOC
+	}
+	
+	In the above example, higherOrderComponent is a function that takes a component called WrappedComponent as an argument. 
+	We have created a new component called HOC which returns the <WrappedComponent/> from its render function.
+	
+	We can invoke the HOC as follows:
+	
+	const SimpleHOC = higherOrderComponent(MyComponent);
+	
+	A higher-order component transforms a component into another component. Note that a HOC doesn’t modify the input component. 
+	Rather, a HOC composes the original component by wrapping it in a container component. A HOC is a pure function with zero side-effects.
+	
+	1. Don’t Use HOCs inside the render method
+	
+		render() {
+		  // A new version of ProductsListWithSearch is created on every render
+		  const ProductsListWithSearch = withSearch(ProductsList);
+		  // That causes the entire subtree to unmount/remount each time!
+		  return <ProductsListWithSearch />;
+		}
+	
+	2. Refs are not passed through
+		You may want to pass all props to the wrapped component. However, you need to pay attention to refs since they are not passed through. 
+		This is because ref is not really a prop — like key, it’s handled specially by React.
+		The solution for this problem is to use the `React.forwardRef` API.
+	
+	3. Libraries such as Redux’s connect, react-router’s withRouter are good examples of why we should think about implementing higher order components.
+	
+	Code:
+	
+	#############################################################################
+	#App.js
+	
+	import React from "react";
+	import withSearch from "./withSearch";
+	import ProductsList from "./ProductsList";
+	import "./styles.css";
+
+	const ProductsListWithSearch = withSearch(ProductsList);
+	const App = () => {
+	  return (
+		<div className="App">
+		  <h1>Hello CodeSandbox</h1>
+		  <h2>Start editing to see some magic happen!</h2>
+		  <ProductsListWithSearch />
+		</div>
+	  );
+	};
+
+	export default App;
+	
+	#############################################################################
+	#withSearch.js
+
+	import React, { useState } from "react";
+	import products from "./products.json";
+
+	const withSearch = (WrappedComponent) => {
+	  const WithSearch = () => {
+		const [searchTerm, setSearchTerm] = useState("");
+
+		const handleSearch = (event) => {
+		  setSearchTerm(event.target.value);
+		};
+
+		const filterProducts = (searchTerm) => {
+		  searchTerm = searchTerm.toUpperCase();
+		  return products.products.filter((product) => {
+			let str = `${product.title} ${product.style} ${product.sku}`.toUpperCase();
+			return str.indexOf(searchTerm) >= 0;
+		  });
+		};
+
+		let filteredProducts = filterProducts(searchTerm);
+
+		return (
+		  <>
+			<input
+			  onChange={handleSearch}
+			  value={searchTerm}
+			  type="text"
+			  placeholder="Search"
+			/>
+			<WrappedComponent data={filteredProducts} />
+		  </>
+		);
+	  };
+
+	  WithSearch.displayName = `WithSearch(${getDisplayName(WrappedComponent)})`;
+	  return WithSearch;
+	};
+
+	const getDisplayName = (WrappedComponent) => {
+	  return WrappedComponent.displayName || WrappedComponent.name || "Component";
+	};
+
+	export default withSearch;
+	
+	#############################################################################
+	#ProductsList.js
+	
+	import ProductCard from "./ProductCard";
+
+	const ProductsList = (props) => {
+	let { data: products } = props;
+	return (
+	<div>
+	  <div>
+		<div>
+		  <h2>Products</h2>
+		</div>
+	  </div>
+	  <div>
+		{products.map((product) => (
+		  <ProductCard key={product.sku} {...product} />
+		))}
+	  </div>
+	</div>
+	);
+	};
+	
+	export default ProductsList;
+	
+	#############################################################################
+	#ProductCard.js
+
+	const ProductCard = (props) => {
+	  const { title, style, price, description, isFreeShipping } = props;
+	  return (
+		<div className="product">
+		  <p>
+			<b>Title:</b> {title}
+		  </p>
+		  <p>
+			<b>Style:</b> {style}
+		  </p>
+		  <p>
+			<b>Price:</b> {price}
+		  </p>
+		  <p>
+			<b>Description:</b> {description}
+		  </p>
+		  <p>
+			<b>Free shipping:</b> {isFreeShipping}
+		  </p>
+		  <hr />
+		</div>
+	  );
+	};
+
+	export default ProductCard;
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Pure Component:
+	Pure Components in React are the components which do not re-renders when the value of state and props has been updated with the same values.
+	If the value of the previous state or props and the new state or props is the same, the component is not re-rendered.
+	Class components that extend the React.PureComponent class are treated as pure components.
+	Pure Components take care of shouldComponentUpdate by itself, it does the shallow comparison on the state and props data.
+	
+	class ChildComponent extends React.PureComponent {
+	  constructor() {
+		super();
+		this.state = {
+		  value: 0
+		};
+	  }
+
+	  onClick() {
+		this.setState((state) => ({ value: state.value}));
+	  }
+
+	  render() {
+		console.log("rendered");
+		return (
+		  <div>
+			<button onClick={this.onClick.bind(this)}>increment</button>
+			<p>{this.state.value}</p>
+		  </div>
+		);
+	  }
+	}
+
+	export default function App() {
+	  return (
+		<div className="App">
+		  <h1>Hello CodeSandbox</h1>
+		  <h2>Start editing to see some magic happen!</h2>
+		  <ChildComponent />
+		</div>
+	  );
+	}
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+What is the significance of keys in React?
+	Keys are used for identifying unique Virtual DOM Elements with their corresponding data driving the UI. 
+	They help React to optimize the rendering by recycling all the existing elements in the DOM. 
+	These keys must be a unique number or string, using which React just reorders the elements instead of re-rendering them. 
+	This leads to increase in application’s performance.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+React Router:
+	React Router is a powerful routing library built on top of React, which helps in adding new screens and flows to the application.
+	This keeps the URL in sync with data that’s being displayed on the web page. 
+	It maintains a standardized structure and behavior and is used for developing single page web applications. React Router has a simple API.
+
+Why is switch keyword used in React Router v4?
+	Although a <div> is used to encapsulate multiple routes inside the Router.
+	The ‘switch’ keyword is used when you want to display only a single route to be rendered amongst the several defined routes.
+	The <switch> tag when in use matches the typed URL with the defined routes in sequential order. 
+	When the first match is found, it renders the specified route. Thereby bypassing the remaining routes.
+	
+Why do we need a Router in React?
+	A Router is used to define multiple routes and when a user types a specific URL, if this URL matches the path of any ‘route’ defined inside the router, 
+		then the user is redirected to that particular route. 
+	So basically, we need to add a Router library to our app that allows creating multiple routes with each leading to us a unique view.
+	
+	<Router>
+		<switch>
+			<route exact path=’/’ component={Home}/>
+			<route path=’/posts/:id’ component={Newpost}/>
+			<route path=’/posts’   component={Post}/>
+		</switch>
+	</Router>
+	
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Flux & Redux
+
+Flux:
+	Flux is an architectural pattern which enforces the uni-directional data flow. 
+	It controls derived data and enables communication between multiple components using a central Store which has authority for all data. 
+	Any update in data throughout the application must occur here only. Flux provides stability to the application and reduces run-time errors.
+	
+What is Redux?
+	A state management system for cross-component or app-wide state.
+	Redux is one of the most trending libraries for front-end development in today’s marketplace. 
+	It is a predictable state container for JavaScript applications and is used for the entire applications state management. 
+	Applications developed with Redux are easy to test and can run in different environments showing consistent behavior.
+
+Disadvantage of React Context: 
+	React context is suitable for small application. For large application React context become complex.
+	When maintain application wide state for theme, authentication, userInput we have to add nested jsx of provider tag in App or else if we add all state in single provider it become complex.
+		return (
+			<AppContextProvider>
+				<ThemeContextProvider>
+					<FormDataProvider>
+						<App />					// it is complex
+					</FormDataProvider>
+				</ThemeContextProvider>
+			</AppContextProvider>
+		)
+	For frequent state changes React context is not suitable, & not optimized & it performance is low.
+
+the three principles that Redux follows?
+	1. Single source of truth: 
+		The state of the entire application is stored in an object/ state tree within a single store. 
+		The single state tree makes it easier to keep track of changes over time and debug or inspect the application.
+	2. State is read-only: 
+		The only way to change the state is to trigger an action. 
+		An action is a plain JS object describing the change. 
+		Just like state is the minimal representation of data, the action is the minimal representation of the change to that data.
+	3. Changes are made with pure functions: 
+		In order to specify how the state tree is transformed by actions, you need pure functions. 
+		Pure functions are those whose return value depends solely on the values of their arguments.
+		
+What do you understand by “Single source of truth”?
+	Redux uses ‘Store’ for storing the application’s entire state at one place. 
+	So all the component’s state are stored in the Store and they receive updates from the Store itself. 
+	The single state tree makes it easier to keep track of changes over time and debug or inspect the application.
+	
+The components of Redux.
+	Action – It’s an object that describes what happened.
+	Reducer –  It is a place to determine how the state will change.
+	Store – State/ Object tree of the entire application is saved in the Store.
+	View – Simply displays the data provided by the Store.
+	
+Data Flow in Redux
+
+	Reducers <------ Actions <------------------------------------------------------------------]
+		|																						|
+		|																			Container --
+		|																				| pass data as props
+	  Store --------> Provider Component ------Re-render when store changes------>	container
+	  
+How are Actions defined in Redux?
+	Actions in React must have a type property that indicates the type of ACTION being performed. 
+	They must be defined as a String constant and you can add more properties to it as well. In Redux, actions are created using the functions called Action Creators
+	
+	function addTodo(text) {
+       return {
+                type: ADD_TODO,    
+                 text    
+		}
+	}
+	
+the role of Reducer. => Reducers must be pure, side-effect free, synchronous functions.
+	Reducers are pure functions which specify how the application’s state changes in response to an ACTION.
+	Reducers work by taking in the previous state and action, and then it returns a new state.
+	It determines what sort of update needs to be done based on the type of the action, and then returns new values. 
+	It returns the previous state as it is, if no work needs to be done.
+	
+the significance of Store in Redux?
+	A store is a JavaScript object which can hold the application’s state and provide a few helper methods to access the state, dispatch actions and register listeners. 
+	The entire state/ object tree of an application is saved in a single store. As a result of this, Redux is very simple and predictable. 
+	We can pass middleware to the store to handle the processing of data as well as to keep a log of various actions that change the state of stores. 
+	All the actions return a new state via reducers.
+	
+the advantages of Redux?
+	Predictability of outcome – Since there is always one source of truth, i.e. the store, there is no confusion about how to sync the current state with actions and other parts of the application.
+	Maintainability – The code becomes easier to maintain with a predictable outcome and strict structure.
+	Server-side rendering – You just need to pass the store created on the server, to the client side. This is very useful for initial render and provides a better user experience as it optimizes the application performance.
+	Developer tools – From actions to state changes, developers can track everything going on in the application in real time.
+	Community and ecosystem – Redux has a huge community behind it which makes it even more captivating to use. A large community of talented individuals contribute to the betterment of the library and develop various applications with it.
+	Ease of testing – Redux’s code is mostly functions which are small, pure and isolated. This makes the code testable and independent.
+	Organization – Redux is precise about how code should be organized, this makes the code more consistent and easier when a team works with it.
+	
+	
+In redux we shouldn't override the existing state in reducer function. instead we create a object & pass the state value we need & return it.
+To overcome these boilerplate code we use @redux/toolkit.there we can mutate the state but redux toolkit internally create copied state, store & return it.
+
+React redux is synchronous, so we can't add side effects or http request methods inside reducers. Reducers must pure, side effects free & synchronous functions
+to overcom this we can write login in component (useEffects) or inside action creators
+
+Thunk: A function that delays an action until later. An action creator function that doesn't return the action itself but another function which eventually return the actions.
+
+
+Fetch: 
+
+To connect with database, React uses backend js such as node.js. because if we use React to connect with DB, then data, credential is visible in browser to users.
+
+so we use Axios which is 3rd party library & Fetch api which is javascript feature.
+Fetch method returns promise object. default methods for fetch is "Get".
+
+function fetchData() {
+	fetch('url')
+		.then((response) => {
+			return response.json();
+		}).then((data) => {
+			data.results.map((ele) => {
+				return {
+					id: data.id,
+					name: data.name
+				}
+			})
+	})
+}
+
+we can use asynchronous operation by using async/await
+
+async fetchData = () => {
+	const response = await fetch('url');
+	const datas = await response.json();
+	datas.results.map((data) => {
+		return {
+			id: data.id,
+			name: data.name
+		}
+	})
+}
+
+so we can write in try/catch block to handle errors
+
+async fetchData = () => {
+	try {
+		const response = await fetch('url');		
+		if(!response.ok) {
+			throw new Error('Something went wrong');
+		}
+		const datas = await response.json();
+		datas.results.map((data) => {
+		return {
+			id: data.id,
+			name: data.name
+		}
+	})
+	} catch(error) {
+		console.log(error.message)
+	}
+}
+
+we have to fetch data on component 1st render, so we use fetch api in useEffect hook. when we add fetchData method call as dependency, it will render when it is changes. but we need to
+wrap that method in useCallback hook to avoid unnecessary renders.
+
+  const fetchData = useCallback(async () => {
+      try {
+        const response = await fetch('https://swapi.dev/api/people/1')
+        if(!response.ok) {
+          throw new Error('something wrong');
+        }
+        const data = await response.json();
+        console.log(data.name);
+      } catch (error) {
+        console.log(error.message);
+      }
+  }, [])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
+  
+  
+Lazy loading
+ const MyComponent = React.lazy(() => import("./page/MyComponent"))
+ 
+ <Suspense fallback={
+	<div>Loading spinner</div>
+	}>
+	<Route>.....
+ </Suspense>
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Axios:
+Axios is an HTTP client library that allows you to make requests to a given endpoint.
+By making a request, you expect your API to perform an operation according to the request you made.
+
+five reasons why you should use Axios as your client to make HTTP requests:
+
+1.It has good defaults to work with JSON data. Unlike alternatives such as the Fetch API, you often don't need to perform tedious tasks like converting your request body to a JSON.stringify(). 
+	or set your headers.
+2.Axios has function names that match any HTTP methods. To perform a GET request, you use the .get() method.
+3.Axios does more with less code. Unlike the Fetch API, you only need one .then() callback to access your requested JSON data.
+4.Axios has better error handling. Axios throws 400 and 500 range errors for you. Unlike the Fetch API, where you have to check the status code and throw the error yourself.
+5.Axios can be used on the server as well as the client. If you are writing a Node.js application, be aware that Axios can also be used in an environment separate from the browser.
+
+Make a GET Request:
+	const baseURL = "https://jsonplaceholder.typicode.com/posts/1";
+	axios.get(baseURL).then((response) => {
+      		setPost(response.data);
+    	});
+
+Make a POST Request:
+To make that POST request with Axios, you use the .post() method. As the second argument, you include an object property that specifies what you want the new post to be.
+	
+	const baseURL = "https://jsonplaceholder.typicode.com/posts";
+	axios.post(baseURL, {
+        	title: "Hello World!",
+        	body: "This is a new post."
+      	})
+      	.then((response) => {
+        	setPost(response.data);
+      	});
+
+Make a PUT Request:
+	
+	const baseURL = "https://jsonplaceholder.typicode.com/posts";
+	axios.put(`${baseURL}/1`, {
+        	title: "Hello World!",
+        	body: "This is an updated post."
+      	})
+      	.then((response) => {
+        	setPost(response.data);
+      	});
+
+Make a DELETE Request:
+Note that you do not need a second argument whatsoever to perform this request
+	
+	const baseURL = "https://jsonplaceholder.typicode.com/posts";
+	axios.delete(`${baseURL}/1`).then(() => {
+        	alert("Post deleted!");
+        	setPost(null)
+      	});
+In most cases, you do not need the data that's returned from the .delete() method.
+But in the code above, the .then() callback is still used to ensure that your request is successfully resolved.
+
+Handle Errors with Axios:
+	
+	const baseURL = "https://jsonplaceholder.typicode.com/posts";
+	axios.get(`${baseURL}/asdf`).then((response) => {
+      		setPost(response.data);
+    	}).catch(error => {
+      		setError(error);
+    	});
+In this case, instead of executing the .then() callback, Axios will throw an error and run the .catch() callback function.
+In this function, we are taking the error data and putting it in state to alert our user about the error. So if we have an error, we will display that error message.
+
+Create an Axios Instance:
+
+	const client = axios.create({
+  		baseURL: "https://jsonplaceholder.typicode.com/posts" 
+	});
+	
+	client.get("/1").then((response) => {
+      		setPost(response.data);
+    	});
+
+	client.delete("/1")
+      		.then(() => {
+        		alert("Post deleted!");
+        		setPost(null)
+      		});
+
+Use the Async-Await Syntax with Axios:
+Async-await allows you to write much cleaner code without then and catch callback functions. 
+Plus, code with async-await looks a lot like synchronous code, and is easier to understand.
+
+import axios from "axios";
+import React from "react";
+
+const client = axios.create({
+  baseURL: "https://jsonplaceholder.typicode.com/posts" 
+});
+
+export default function App() {
+  const [post, setPost] = React.useState(null);
+
+  React.useEffect(() => {
+    async function getPost() {
+      const response = await client.get("/1");
+      setPost(response.data);
+    }
+    getPost();
+  }, []);
+
+  async function deletePost() {
+    await client.delete("/1");
+    alert("Post deleted!");
+    setPost(null);
+  }
+
+  if (!post) return "No post!"
+
+  return (
+    <div>
+      <h1>{post.title}</h1>
+      <p>{post.body}</p>
+      <button onClick={deletePost}>Delete Post</button>
+    </div>
+  );
+}

@@ -1,0 +1,538 @@
+CSS is used to style the html elements
+
+CSS syntax: 
+	h1 {color: blue; font-size: 12px;}
+h1 => selector point to html elements you want to style.
+color => property
+blue => value
+
+CSS Selectors: => A CSS Selector selects the HTML elements you want to style.
+
+CSS Selectors divided into five categories:
+1.Simple selectors =>(select elements based on name, id, class)
+2.Combinator selectors =>(select elements based on a specific relationship between them)
+3.Pseudo-class selectors =>(select elements based on a certain state)
+4.Pseudo-elements selectors =>(select and style a part of an element)
+5.Attribute selectors => (select elements based on an attribute or attribute value)
+
+1.Simple selectors:
+
+The CSS element Selector => <p> elements on the page will be center-aligned, with a red text color:
+
+<p>Every paragraph will be affected by the style.</p>
+
+p {
+  text-align: center;
+  color: red;
+}
+
+The CSS class Selector => The class selector selects HTML elements with a specific class attribute.
+
+<h1 class="center">Red and center-aligned heading</h1> 
+
+.center {
+  text-align: center;
+  color: red;
+}
+
+You can also specify that only specific HTML elements should be affected by a class.
+
+<p class="center">This paragraph will be red and center-aligned.</p> 
+
+p.center {
+  text-align: center;
+  color: red;
+}
+
+
+The CSS id Selector => The id selector uses the id attribute of an HTML element to select a specific element.
+
+<p id="para1">Hello World!</p>
+
+#para1 {
+  text-align: center;
+  color: red;
+}
+
+The CSS Universal Selector => The universal selector (*) selects all HTML elements on the page.
+
+* {
+  text-align: center;
+  color: blue;
+}
+
+The CSS Grouping Selector => The grouping selector selects all the HTML elements with the same style definitions.
+
+<h1>Hello World!</h1>
+<h2>Smaller heading!</h2>
+<p>This is a paragraph.</p>
+
+h1, h2, p {
+  text-align: center;
+  color: red;
+}
+
+2.Combinator selectors: A CSS selector can contain more than one simple selector. Between the simple selectors, we can include a combinator.
+
+There are four different combinators in CSS:
+
+1.descendant selector (space)
+2.child selector (>)
+3.adjacent sibling selector (+)
+4.general sibling selector (~)
+
+descendant selector (space) => The descendant selector matches all elements that are descendants of a specified element.
+
+The following example selects all <p> elements inside <div> elements: 
+
+<div>
+  <p>Paragraph 1 in the div.</p>
+  <p>Paragraph 2 in the div.</p>
+  <section><p>Paragraph 3 in the div.</p></section>
+</div>
+
+div p {
+  background-color: yellow;
+}
+
+Child Selector (>) => The child selector selects all elements that are the children of a specified element.
+
+<div>
+  <p>Paragraph 1 in the div.</p>
+  <p>Paragraph 2 in the div.</p>
+  <section>
+    <!-- not Child but Descendant -->
+    <p>Paragraph 3 in the div (inside a section element).</p>
+  </section>
+  <p>Paragraph 4 in the div.</p>
+</div>
+
+div > p {
+  background-color: yellow;
+}
+
+Adjacent Sibling Selector (+) => The adjacent sibling selector is used to select an element that is directly after another specific element.
+
+Sibling elements must have the same parent element, and "adjacent" means "immediately following".
+
+The following example selects the first <p> element that are placed immediately after <div> elements:
+
+<div>
+  <p>Paragraph 1 in the div.</p>
+  <p>Paragraph 2 in the div.</p>
+</div>
+
+<p>Paragraph 3. After a div.</p>
+<p>Paragraph 4. After a div.</p>
+
+<div>
+  <p>Paragraph 5 in the div.</p>
+  <p>Paragraph 6 in the div.</p>
+</div>
+
+<p>Paragraph 7. After a div.</p>
+<p>Paragraph 8. After a div.</p>
+
+div + p {
+  background-color: yellow;
+}
+
+General Sibling Selector (~) => 
+
+The general sibling selector selects all elements that are next siblings of a specified element.
+
+The following example selects all <p> elements that are next siblings of <div> elements: 
+
+<p>Paragraph 1.</p>
+
+<div>
+  <p>Paragraph 2.</p>
+</div>
+
+<p>Paragraph 3.</p>
+<code>Some code.</code>
+<p>Paragraph 4.</p>
+
+div ~ p {
+  background-color: yellow;
+}
+
+A pseudo-class: Used to define a special state of an element.
+
+For example, it can be used to:
+1.Style an element when a user mouses over it
+2.Style visited and unvisited links differently
+3.Style an element when it gets focus
+
+syntax:
+
+selector:pseudo-class {
+  property: value;
+}
+
+/* unvisited link */
+a:link {
+  color: #FF0000;
+}
+
+/* visited link */
+a:visited {
+  color: #00FF00;
+}
+
+/* mouse over link */
+a:hover {
+  color: #FF00FF;
+}
+
+/* selected link */
+a:active {
+  color: #0000FF;
+}
+
+Note: 	a:hover MUST come after a:link and a:visited in the CSS definition in order to be effective! 
+	a:active MUST come after a:hover in the CSS definition in order to be effective! Pseudo-class names are not case-sensitive.
+
+Pseudo-classes and HTML Classes => Pseudo-classes can be combined with HTML classes:
+ 
+<p><a class="highlight" href="css_syntax.asp">CSS Syntax</a></p>
+
+a.highlight:hover {
+  color: #ff0000;
+  font-size: 22px;
+}
+
+Simple Tooltip Hover:
+
+<div>Hover over this div element to show the p element
+  <p>Tada! Here I am!</p>
+</div>
+
+p {
+  display: none;
+  background-color: yellow;
+  padding: 20px;
+}
+
+div:hover p {
+  display: block;
+}
+
+The :first-child Pseudo-class: => The :first-child pseudo-class matches a specified element that is the first child of another element.
+
+p:first-child {
+  color: blue;
+}
+
+<p>This is some text.</p>
+<p>This is some text.</p>
+
+<div>
+  <p>This is some text.</p>
+  <p>This is some text.</p>
+</div>
+
+<p>I am a <i>strong</i> person. I am a <i>strong</i> person.</p>
+
+p i:first-child {
+  color: blue;
+}
+
+CSS Pseudo-elements: => pseudo-element is used to style specified parts of an element.
+
+For example, it can be used to:
+
+1.Style the first letter, or line, of an element
+2.Insert content before, or after, the content of an element
+
+selector::pseudo-element {
+  property: value;
+}
+
+The ::first-line Pseudo-element: => The ::first-line pseudo-element is used to add a special style to the first line of a text
+
+<p>You can use the ::first-line pseudo-element to add a special style to the first line of a text. Some more text. And even more, and more, and more, and more, and more, and more, and more, and more, and more, and more, and more, and more.</p>
+
+p::first-line {
+  color: #ff0000;
+  font-variant: small-caps;
+}
+
+Note: The ::first-line pseudo-element can only be applied to block-level elements.
+
+The ::first-letter Pseudo-element: => The ::first-letter pseudo-element is used to add a special style to the first letter of a text.
+
+p::first-letter {
+  color: #ff0000;
+  font-size: xx-large;
+}
+
+<p>You can use the ::first-letter pseudo-element to add a special effect to the first character of a text!</p>
+
+CSS Attribute Selectors: => The [attribute] selector is used to select elements with a specified attribute.
+
+<a href="http://www.disney.com" target="_blank">disney.com</a>
+
+a[target] {
+  background-color: yellow;
+}
+
+CSS [attribute="value"] Selector => The [attribute="value"] selector is used to select elements with a specified attribute and value.
+
+<a href="http://www.disney.com" target="_blank">disney.com</a>
+
+a[target="_blank"] {
+  background-color: yellow;
+}
+
+
+*********************************************************************************************************************
+/* CSS COMMENTS */
+
+CSS Colors: 
+=> <h1 style="color:Tomato;">Hello World</h1>
+=> <h1 style="border:2px solid Tomato;">Hello World</h1>
+
+CSS Color Values: =>  CSS, colors can also be specified using RGB values, HEX values, HSL values, RGBA values, and HSLA values:
+RGB => Red Green Blue => rgb(255, 99, 71)
+HEX(Hexadecimal values) => #RRGGBB => #ff6347
+HSL(Hue, saturation, lightness) => hsl(9, 100%, 64%)
+rgba => a for alpha range from 0 to 1 default is 1 rgba(255, 99, 71, 0.5)
+hsla => a for alpha range from 0 to 1 default is 1 hsla(9, 100%, 64%, 0.5)
+
+CSS Backgrounds: CIRAP
+
+background-color
+background-image
+background-repeat
+background-attachment
+background-position
+
+=> background: #ffffff url("img_tree.png") no-repeat right top;
+
+CSS Borders: 
+
+border-width
+border-style (required)
+border-color
+
+=> border: 5px solid red;
+
+Margin Collapse => Top and bottom margins of elements are sometimes collapsed into a single margin that is equal to the largest of the two margins.
+
+h1 {
+  margin: 0 0 50px 0;
+}
+
+h2 {
+  margin: 20px 0 0 0;
+}
+
+In the example above, the <h1> element has a bottom margin of 50px and the <h2> element has a top margin set to 20px.
+
+Common sense would seem to suggest that the vertical margin between the <h1> and the <h2> would be a total of 70px (50px + 20px). But due to margin collapse, 
+the actual margin ends up being 50px.
+
+Padding and Element Width: => The CSS width property specifies the width of the element's content area. The content area is the portion inside the padding, border, and margin of an element (the box model). So, if an element has a specified width, the padding added to that element will be added to the total width of the element. This is often an undesirable result.
+
+Example
+Here, the <div> element is given a width of 300px. However, the actual width of the <div> element will be 350px (300px + 25px of left padding + 25px of right padding):
+
+div.ex1 {
+  width: 300px;
+  background-color: yellow;
+}
+
+div.ex2 {
+  width: 300px;
+  padding: 25px;
+  background-color: lightblue;
+}
+
+<div class="ex1">This div is 300px wide.</div>
+<br>
+
+<div class="ex2">The width of this div is 350px, even though it is defined as 300px in the CSS.</div>
+
+To keep the width at 300px, no matter the amount of padding, you can use the box-sizing property. This causes the element to maintain its actual width; if you increase the padding, the available content space will decrease.
+
+div {
+  width: 300px;
+  padding: 25px;
+  box-sizing: border-box;
+}
+
+
+When the text-align property is set to "justify", each line is stretched so that every line has equal width, and the left and right margins are straight (like in magazines and newspapers)
+
+div {
+  text-align: justify;
+}
+
+Vertical Alignment:
+
+img.a {
+  vertical-align: baseline;
+}
+
+img.b {
+  vertical-align: text-top;
+}
+
+img.c {
+  vertical-align: text-bottom;
+}
+
+img.d {
+  vertical-align: sub;
+}
+
+img.e {
+  vertical-align: super;
+}
+
+Text Decoration: => The text-decoration property is used to set or remove decorations from text.
+a {
+  text-decoration: none;
+}
+h2 {
+  text-decoration: overline;
+}
+
+h3 {
+  text-decoration: line-through;
+}
+
+h4 {
+  text-decoration: underline;
+}
+
+Text Transformation: => The text-transform property is used to specify uppercase and lowercase letters in a text.
+p.uppercase {
+  text-transform: uppercase;
+}
+
+p.lowercase {
+  text-transform: lowercase;
+}
+
+p.capitalize {
+  text-transform: capitalize;
+}
+
+Text Indentation: => The text-indent property is used to specify the indentation of the first line of a text:
+p {
+  text-indent: 50px;
+}
+
+Letter Spacing: => The letter-spacing property is used to specify the space between the characters in a text.
+h1 {
+  letter-spacing: 5px;
+}
+
+Line Height: => The line-height property is used to specify the space between lines
+
+p.small {
+  line-height: 0.8;
+}
+
+Word Spacing => The word-spacing property is used to specify the space between the words in a text.
+p.one {
+  word-spacing: 10px;
+}
+
+White Space => The white-space property specifies how white-space inside an element is handled.
+p {
+  white-space: nowrap;
+}
+
+Font Size: Note: If you do not specify a font size, the default size for normal text, like paragraphs, is 16px (16px=1em).
+h1 {
+  font-size: 2.5em; /* 40px/16=2.5em */
+}
+In the example above, the text size in em is the same as the previous example in pixels. However, with the em size, it is possible to adjust the text size in all browsers.
+Viewport is the browser window size. 1vw = 1% of viewport width. If the viewport is 50cm wide, 1vw is 0.5cm.
+
+CSS Google Fonts: => If you do not want to use any of the standard fonts in HTML, you can use Google Fonts.
+How To Use Google Fonts => Just add a special style sheet link in the <head> section and then refer to the font in the CSS.
+
+<head>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+<style>
+body {
+  font-family: "Sofia", sans-serif;
+}
+</style>
+</head>
+
+CSS Font Property: 
+The font property is a shorthand property for: SVWSLF
+font-style
+font-variant
+font-weight
+font-size/line-height
+font-family
+
+CSS Icons: => The simplest way to add an icon to your HTML page, is with an icon library, such as Font Awesome.
+
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<i class="fas fa-cloud"></i>
+<i class="fas fa-heart"></i>
+<i class="fas fa-car"></i>
+<i class="fas fa-file"></i>
+<i class="fas fa-bars"></i>
+</body>
+</html>
+
+Bootstrap Icons
+To use the Bootstrap glyphicons, add the following line inside the <head> section of your HTML page:
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+Note: No downloading or installation is required!
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+<i class="glyphicon glyphicon-cloud"></i>
+<i class="glyphicon glyphicon-remove"></i>
+<i class="glyphicon glyphicon-user"></i>
+<i class="glyphicon glyphicon-envelope"></i>
+<i class="glyphicon glyphicon-thumbs-up"></i>
+</body>
+</html>
+
+Google Icons
+To use the Google icons, add the following line inside the <head> section of your HTML page:
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+Note: No downloading or installation is required!
+
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+<body>
+<i class="material-icons">cloud</i>
+<i class="material-icons">favorite</i>
+<i class="material-icons">attachment</i>
+<i class="material-icons">computer</i>
+<i class="material-icons">traffic</i>
+</body>
+</html>
+
+CSS Lists:
+
+ul {
+  list-style: square inside url("sqpurple.gif");
+}
